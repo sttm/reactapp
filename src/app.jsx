@@ -37,7 +37,7 @@ export default function Home() {
   // Fetch images when component mounts
   useEffect(() => {
     async function fetchImages() {
-      const response = await fetch("src/output.json");
+      const response = await fetch("https://raw.githubusercontent.com/sttm/reactapp/glitch/src/output.json");
       const data = await response.json();
       setImages(data);
     }
