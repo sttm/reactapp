@@ -1,19 +1,12 @@
-import * as React from "react";
-import { Switch, Route, Router } from "wouter";
-import Home from "../pages/home";
-import About from "../pages/about";
+import React from "react";
+import { Route, Switch } from "wouter";
+// import Home from "../pages/home.jsx";
+import About from "../pages/about.jsx";
 
-/**
-* The router is imported in app.jsx
-*
-* Our site just has two routes in it–Home and About
-* Each one is defined as a component in /pages
-* We use Switch to only render one route at a time https://github.com/molefrog/wouter#switch-
-*/
-
-export default () => (
+export default function PageRouter() {
+  return (
     <Switch>
-      <Route path="/" component={Home} />
       <Route path="/about" component={About} />
     </Switch>
-);
+  );
+}
