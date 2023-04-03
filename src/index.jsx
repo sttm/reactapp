@@ -1,9 +1,16 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from 'react-dom/client';
 import App from "./app.jsx";
-import { HelmetProvider } from "react-helmet-async";
-import { createRoot } from "react-dom/client";
-const rootElement = document.getElementById("root");
+import { HelmetProvider } from 'react-helmet-async';
+
+/**
+* Root of react site 
+*
+* Imports Helment provider for the page head
+* And App which defines the content and navigation
+*/
+
+// Use createRoot instead of ReactDOM.render
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <HelmetProvider>
@@ -11,9 +18,3 @@ createRoot(document.getElementById("root")).render(
     </HelmetProvider>
   </React.StrictMode>
 );
-/**
- * Root of react site
- *
- * Imports Helment provider for the page head
- * And App which defines the content and navigation
- */

@@ -1,143 +1,364 @@
+//app.jsx
 import React, { useState, useEffect, useRef } from "react";
-import { MediaMetadata } from 'media-metadata';
 import { Router, Link } from "wouter";
-
 import "./styles/styles.css";
+import "./styles/player.css";
 
 import PageRouter from "./components/router.jsx";
-
 import Seo from "./components/seo.jsx";
+import Player from "./components/player.jsx";
 
-
-
-// Home function that is reflected across the site
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(false);
   const dummyAudioElementRef = useRef(null);
- const [audioSource, setAudioSource] = useState(null);
-  const [audioState, setAudioState] = useState('STOPPED');
+  const [audioState, setAudioState] = useState("STOPPED");
 
-async function loadAudio() {
-    const context = new AudioContext();
+  const audioContextRef = useRef(null);
+  const audioSourceRef = useRef(null);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [showPanel, setShowPanel] = useState(false);
+  const [tracks, setTracks] = useState([]);
+  const [images, setImages] = useState([]);
+  const [allTracks, setAllTracks] = useState([]);
+  const [images_v, setImagesV] = useState([]);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const trackHistory = [];
+  const [lastImageElement, setLastImageElement] = useState(null);
+
+  function handleScroll() {
+    setShowPanel(false);
+  }
+
+  // Add scroll event listener to window object
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  // Fetch images when component mounts
+  useEffect(() => {
+    fetchMoreImages();
+  }, []);
+
+  async function fetchMoreImages() {
+    const response = await fetch("src/output.json");
+    const data = await response.json();
+    setImages((prevImages) => [...prevImages, ...data]);
+  }
+
+  useEffect(() => {
+    if (!IntersectionObserver) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          fetchMoreImages();
+        }
+      },
+      { threshold: 1 }
+    );
+
+    if (lastImageElement) {
+      observer.observe(lastImageElement);
+    }
+
+    return () => {
+      if (lastImageElement) {
+        observer.unobserve(lastImageElement);
+      }
+    };
+  }, [lastImageElement]);
+
+  function togglePanel(downloadUrl, imgUrl, allTracks) {
+    if (!showPanel) {
+      try {
+        setTracks(downloadUrl);
+        setImagesV(imgUrl);
+        setAllTracks(allTracks);
+        setShowPanel(true);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      if (isAudioPlaying) {
+        stop();
+      }
+      setShowPanel(false);
+    }
+  }
+
+  // Create an audio context if one doesn't already exist
+  function createAudioContext() {
+    if (!audioContextRef.current) {
+      audioContextRef.current = new (window.AudioContext ||
+        window.webkitAudioContext)();
+    }
+  }
+
+  function playTrack(trackIndex) {
+    const track = allTracks[trackIndex];
+    setAudioState("PLAYING");
+    loadAudio(track.uri);
+    createAudioContext();
+    setCurrentTrackIndex(trackIndex);
+  }
+
+  function setCurrentTrackIndexFromPlayer(newIndex) {
+    setCurrentTrackIndex(newIndex);
+  }
+
+  // Stop audio playback
+  function stop() {
+    setAudioState("STOPPED");
+    setIsAudioPlaying(false);
+    if (audioSourceRef.current) {
+      audioSourceRef.current.stop();
+    }
+  }
+
+  async function loadAudio(url) {
+    setIsLoading(true);
+    if (!audioContextRef.current) {
+      return;
+    }
+    const context = audioContextRef.current;
+    if (context.state === "suspended") {
+      await context.resume();
+    }
+
+    if (audioSourceRef.current) {
+      audioSourceRef.current.stop();
+      audioSourceRef.current.disconnect();
+    }
+
     const source = context.createBufferSource();
     source.connect(context.destination);
+    audioSourceRef.current = source;
 
     // Load buffer
-    const request = new XMLHttpRequest();
-    request.open('GET', 'https://cdn.glitch.global/2f792964-ce14-4932-9a6d-b9c37b53bd80/output.m4a?v=1679917550933', true);
-    request.responseType = 'arraybuffer';
-    request.onload = () => {
-      context.decodeAudioData(request.response, (response) => {
-        // Play the sound after the buffer has loaded
-        source.buffer = response;
-        source.start(0);
-        source.loop = true;
-      }, () => {
-        console.error('The request failed.');
-      });
-    };
-    request.send();
-    // const audioCtx = new window.AudioContext();
-    // const source = audioCtx.createBufferSource();
-    // const arrayBuffer = await fetch(
-    //   'https://cdn.glitch.global/2f792964-ce14-4932-9a6d-b9c37b53bd80/loop1.aac?v=1679915046906',
-    // ).then((res) => res.arrayBuffer());
-    // const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-    // source.buffer = audioBuffer;
-    // source.loop = true;
-    // source.connect(audioCtx.destination);
-    // source.start(1); // start playback immediately
-    // setAudioSource(source);
-}
+    const response = await fetch(url);
+    const arrayBuffer = await response.arrayBuffer();
+    const audioBuffer = await context.decodeAudioData(arrayBuffer);
 
-  const play = () => {
-    setAudioState('PLAYING');
-  };
-
-  const pause = () => {
-    setAudioState('STOPPED');
-    if (audioSource) {
-      audioSource.stop();
-    }
-  };
-
-  useEffect(() => {
-    if (audioState === 'PLAYING') {
-      loadAudio();
-    } else if (audioState === 'STOPPED') {
-      if (audioSource) {
-        audioSource.stop();
-      }
-    }
-  }, [audioState]);
-useEffect(() => {
-  if (dummyAudioElementRef.current) {
-    dummyAudioElementRef.current.volume = 0;
-    dummyAudioElementRef.current.loop = true;
+    source.buffer = audioBuffer;
+    source.start(0);
+    source.loop = true;
+    setIsAudioPlaying(true);
+    setIsLoading(false); // Добавьте это
   }
-}, []);
-  
+
+  const play = (trackUri) => {
+    setAudioState("PLAYING");
+
+    if (isAudioPlaying) return;
+    loadAudio(trackUri);
+    setIsAudioPlaying(true);
+  };
+
   useEffect(() => {
-    if ('mediaSession' in navigator && typeof MediaMetadata !== 'undefined') {
-      navigator.mediaSession.metadata = new MediaMetadata({
-        title: 'Environmental sounds',
-        artist: 'Tranquil',
-        album: '',
+    const allTracks = [];
+
+    images.forEach((image) => {
+      allTracks.push(...image.field_mobile_looper.und);
+    });
+
+    setAllTracks(allTracks);
+  }, [images]);
+
+  // Clean up audio context when component is unmounted
+  useEffect(() => {
+    return () => {
+      if (audioSourceRef.current) {
+        audioSourceRef.current.stop();
+        audioSourceRef.current.disconnect();
+      }
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if ("mediaSession" in navigator) {
+      if (audioState === "PLAYING") {
+        navigator.mediaSession.playbackState = "playing";
+        dummyAudioElementRef.current?.play();
+      } else if (audioState === "PAUSED") {
+        navigator.mediaSession.playbackState = "paused";
+        dummyAudioElementRef.current?.pause();
+      }
+
+      navigator.mediaSession.setActionHandler("play", () => {
+        setIsAudioPlaying(true);
+        setAudioState("PLAYING");
+        // audioContextRef.current?.play();
+        playTrack(currentTrackIndex);
+      });
+
+      navigator.mediaSession.setActionHandler("pause", () => {
+        setIsAudioPlaying(false);
+        setAudioState("PAUSED");
+        stop();
+      });
+
+      navigator.mediaSession.setActionHandler(
+        "previoustrack",
+        playPreviousTrack
+      );
+      navigator.mediaSession.setActionHandler("nexttrack", playNextTrack);
+    }
+  }, [audioState, playPreviousTrack, playNextTrack, currentTrackIndex]);
+
+  useEffect(() => {
+    if (dummyAudioElementRef.current) {
+      dummyAudioElementRef.current.volume = 0;
+      dummyAudioElementRef.current.loop = true;
+    }
+  }, []);
+
+  // Update media session metadata when current track index or images change
+  useEffect(() => {
+    if (
+      "mediaSession" in navigator &&
+      allTracks.length > 0 &&
+      images.length > 0
+    ) {
+      const currentTrack = allTracks[currentTrackIndex];
+      const currentImage = images.find((image) =>
+        image.field_mobile_looper.und.some(
+          (track) => track.uri === currentTrack.uri
+        )
+      );
+      navigator.mediaSession.metadata = new window.MediaMetadata({
+        title: currentTrack.title_album ?? "",
+        artist: currentTrack.filename ?? "",
         artwork: [
           {
-            src: '/images/rain.jpeg',
-            sizes: '951x634', // HeightxWidth
-            type: 'image/jpeg',
+            src: currentImage.field_image_field.und[0].uri,
+            sizes: "512x512",
+            type: "image/png",
           },
         ],
       });
-
-      navigator.mediaSession.setActionHandler('play', () => play());
-      navigator.mediaSession.setActionHandler('pause', () => pause());
     }
-  }, [play, pause]);
-  
-useEffect(() => {
-  if ('mediaSession' in navigator) {
-    if (audioState === 'PLAYING') {
-      navigator.mediaSession.playbackState = 'playing';
-      dummyAudioElementRef.current?.play();
+  }, [currentTrackIndex, images, allTracks, images_v]);
+
+  function playNextTrack() {
+    trackHistory.push(currentTrackIndex);
+    const nextTrackIndex =
+      (currentTrackIndex + 1 + Math.floor(Math.random() * allTracks.length)) %
+      allTracks.length;
+    playTrack(nextTrackIndex);
+  }
+
+  function playPreviousTrack() {
+    if (trackHistory.length > 0) {
+      const previousTrackIndex = trackHistory.pop();
+      playTrack(previousTrackIndex);
     } else {
-      navigator.mediaSession.playbackState = 'paused';
-      dummyAudioElementRef.current?.pause();
+      // Если нет истории, просто переключитесь на предыдущий трек в списке
+      const previousTrackIndex =
+        (currentTrackIndex - 1 + allTracks.length) % allTracks.length;
+      playTrack(previousTrackIndex);
     }
   }
-}, [audioState]);
+  // useEffect(() => {
+  //   console.log("audioState:", audioState);
+  //   console.log("isAudioPlaying:", isAudioPlaying);
+  // }, [audioState, isAudioPlaying]);
   return (
-    <Router>
+  <>
+    <audio
+      ref={dummyAudioElementRef}
+      src="https://github.com/anars/blank-audio/blob/master/15-seconds-of-silence.mp3?raw=true"
+    />
+    <div>
+      {images.length > 0 ? (
+        <ul>
+          {images.map((image, index) => (
+            <li
+              key={image.id}
+              ref={index === images.length - 1 ? setLastImageElement : null}
+            >
+              <h2>{image.title}</h2>
+              <img
+                src={image.field_image_field.und[0].uri}
+                alt={image.title}
+              />
+              <button
+                className="btn--panel-toggle"
+                onClick={() =>
+                  togglePanel(
+                    image.field_mobile_looper.und,
+                    image.field_image_field.und[0].uri,
+                    allTracks
+                  )
+                }
+              >
+                Show tracks
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>Loading images...</p>
+      )}
+    </div>
+      {showPanel && (
+        <div className="panel">
+          {tracks.map((track, index) => (
+            <div className="track" key={index}>
+              <img src={images_v} alt={`Cover of ${track.title}`} />
+              <h3>{track.filename}</h3>
+              <div className="controls">
+                <button
+                  onClick={() => {
+                    if (audioContextRef.current) {
+                      if (audioContextRef.current.state === "suspended") {
+                        audioContextRef.current.resume();
+                      }
+                    } else {
+                      audioContextRef.current = new (window.AudioContext ||
+                        window.webkitAudioContext)();
+                    }
+
+                    if (isAudioPlaying) {
+                      stop();
+                    } else {
+                      play(track.uri);
+                    }
+                  }}
+                >
+                  {isAudioPlaying ? "Stop" : isLoading ? "Загрузка..." : "Play"}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      <Router>
+        <PageRouter path="/pages/:pageName" />
+      </Router>
       <Seo />
-      <div className="links">
-        <Link href="/">Home</Link>
-        <span className="divider">|</span>
-        <Link href="/about">About</Link>
-      </div>
-      <div className="audio-controls">
-        <button onClick={play}>Play</button>
-        <button onClick={pause}>Pause</button>
-        <button onClick={() => setAudioState("LOADING")}>Load Audio</button>
-      </div>
-      <audio
-        ref={dummyAudioElementRef}
-        src="https://github.com/anars/blank-audio/blob/master/15-seconds-of-silence.mp3?raw=true"
+      <Player
+        allTracks={allTracks}
+        isAudioPlaying={isAudioPlaying}
+        stop={stop}
+        play={play}
+        playTrack={playTrack}
+        currentTrackIndex={currentTrackIndex}
+        setCurrentTrackIndex={setCurrentTrackIndexFromPlayer}
+        currentTrack={allTracks[currentTrackIndex]}
+        currentImage={images.find((image) =>
+          image.field_mobile_looper.und.some(
+            (track) => track.uri === allTracks[currentTrackIndex]?.uri
+          )
+        )}
+        audioContextRef={audioContextRef}
+        isLoading={isLoading}
       />
-      <main role="main" className="wrapper">
-        <div className="content">
-          {/* Router specifies which component to insert here as the main content */}
-          <PageRouter />
-        </div>
-      </main>
-      {/* Footer links to Home and About, Link elements matched in router.jsx */}
-      <footer className="footer">
-        <div className="links">
-          <Link href="/">Home</Link>
-          <span className="divider">|</span>
-          <Link href="/about">About</Link>
-        </div>
-      </footer>
-    </Router>
+    </>
   );
 }

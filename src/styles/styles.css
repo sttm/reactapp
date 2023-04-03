@@ -1,22 +1,169 @@
-/******************************************************************************
-START Glitch hello-app default styles
+/* Import fonts */
+@font-face {
+  font-family: HK Grotesk;
+  src: url("https://cdn.glitch.me/605e2a51-d45f-4d87-a285-9410ad350515%2FHKGrotesk-Regular.otf?v=1603136326027")
+    format("opentype");
+}
 
-The styles in this section do some minimal CSS resets, set default fonts and 
-colors, and handle the layout for our footer and "Remix on Glitch" button. If
-you're new to CSS they may seem a little complicated, but you can scroll down
-to this section's matching END comment to see page-specific styles.
-******************************************************************************/
-/* Our default values set as CSS variables */
+
+html,
+body {
+/*   margin: 0; */
+/*   padding: 0; */
+  overflow-x: hidden;
+  max-width: 100%;
+}
+body {
+  font-family: HK Grotesk;
+  background-color: var(--color-bg);
+  overflow-x: hidden; /* Добавьте это свойство */
+}
+a {
+    font-size: 11px;
+}
+ul {
+  width: inherit;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+li {
+  width: 100%;
+  padding: 10px;
+  background-color: #f7f7f7;
+  border-radius: 5px;
+  max-width: 300px;
+  list-style-type: none;
+  margin: 50px 0 50px 0;
+}
+h1 {
+  color: #2800FF;
+  font-family: HK Grotesk;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 100px;
+  line-height: 105%;
+}
+img {
+  max-width: 100%;
+}
 :root {
+  
   --color-bg: #FFFFA0;
   --color-text-main: #000000;
   --color-primary: #AFECE0;
   --wrapper-height: 85vh;
-  --image-max-width: 320px;
+  --image-max-width: 10px;
   --font-family: "HK Grotesk";
   --font-family-header: "HK Grotesk";
 }
 
+.wrapper {
+  min-height: var(--wrapper-height);
+  display: grid;
+  place-items: center;
+  margin: 0 1rem;
+  min-height: 86vh;
+  overflow-x: hidden; /* Добавьте это свойство */
+  max-width: 100%;
+}
+
+
+.playButton {
+  display: inline-block;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+}
+
+.playButton:hover {
+  background-color: #e0e0e0;
+}
+
+.playButton:focus {
+  border-color: #007bff;
+}
+
+
+
+.btn--panel-toggle {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #0077cc;
+  color: #fff;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+.content h2 {
+  font-family: HK Grotesk;
+  color: black;
+  text-align: center
+}
+.panel {
+  position: fixed;
+  bottom: 60px;
+  left: 0;
+  width: 100%;
+  max-height: 400px;
+  overflow-y: scroll;
+  background-color: #f7f7f7;
+  border-top: 1px solid #ddd;
+}
+
+.track {
+  display: flex;
+/*   align-items: center; */
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.track img {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.track h3 {
+  align-items: left;
+  margin: 0;
+  font-size: 16px;
+font-size-adjust: 0.5;
+}
+
+.controls {
+  margin-left: auto;
+}
+
+.controls button,
+.controls a {
+  margin-left: 10px;
+  padding: 5px 10px;
+  background-color: #0077cc;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.controls button:hover,
+.controls a:hover {
+  background-color: #006bb3;
+}
+
+/* img{
+    width:100%;
+} */
 /* Basic page style resets */
 * {
   box-sizing: border-box;
@@ -25,18 +172,7 @@ to this section's matching END comment to see page-specific styles.
   display: none !important;
 }
 
-/* Import fonts */
-@font-face {
-  font-family: HK Grotesk;
-  src: url("https://cdn.glitch.me/605e2a51-d45f-4d87-a285-9410ad350515%2FHKGrotesk-Regular.otf?v=1603136326027")
-    format("opentype");
-}
-@font-face {
-  font-family: HK Grotesk;
-  font-weight: bold;
-  src: url("https://cdn.glitch.me/605e2a51-d45f-4d87-a285-9410ad350515%2FHKGrotesk-Bold.otf?v=1603136323437")
-    format("opentype");
-}
+
 
 /* Our remix on glitch button */
 .btn--remix {
@@ -64,13 +200,12 @@ to this section's matching END comment to see page-specific styles.
   background-color: #D0FFF1;
 }
 
-/* Navigation grid */
 .footer {
   display: flex;
   justify-content: space-between;
   margin: 1rem auto 0;
   padding: 1rem 0 0.75rem 0;
-  width: 100%;
+  width: calc(100% - 2rem); /* Измените это свойство */
   flex-wrap: wrap;
   border-top: 4px solid #fff;
 }
@@ -97,38 +232,8 @@ a:not(.btn--remix):visited {
 .divider {
   padding: 0 1rem;
 }
-/******************************************************************************
-END Glitch hello-app default styles
-******************************************************************************/
 
-/* Page structure */
-body {
-  font-family: HK Grotesk;
-  background-color: var(--color-bg);
-}
-.wrapper {
-  min-height: var(--wrapper-height);
-  display: grid;
-  place-items: center;
-  margin: 0 1rem;
-  min-height: 86vh;
-}
-.content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
 
-/* Page titles */
-h1 {
-  color: #2800FF;
-  font-family: HK Grotesk;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 100px;
-  line-height: 105%;
-}
 .page h1 {
   font-size: 48px;
 }
@@ -138,7 +243,7 @@ h1 {
 }
 
 .page a {
-  color: #000;
+  color: #000000;
 }
 
 .page a:hover {
@@ -171,5 +276,28 @@ h1 {
   font-size: 1rem;
 }
 h2 {
-  color: #2800FF;
+/*   color: #2800FF; */
+  text-align: center;
 }
+/* @media screen and (max-width: 767px) {
+  ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  li {
+    width: 100%;
+    padding: 10px;
+    background-color: #f7f7f7;
+    border-radius: 5px;
+    max-width: 300px;
+    list-style-type: none;
+    margin: 50px 0;
+  }
+
+  .wrapper {
+    padding: 0 20px;
+  }
+} */
