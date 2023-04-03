@@ -22,6 +22,9 @@ export default function Home() {
   const [allTracks, setAllTracks] = useState([]);
   const [images_v, setImagesV] = useState([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const trackHistory = [];
+  const [lastImageElement, setLastImageElement] = useState(null);
+
   function handleScroll() {
     setShowPanel(false);
   }
@@ -36,13 +39,37 @@ export default function Home() {
 
   // Fetch images when component mounts
   useEffect(() => {
-    async function fetchImages() {
-      const response = await fetch("https://raw.githubusercontent.com/sttm/reactapp/glitch/src/output.json");
-      const data = await response.json();
-      setImages(data);
-    }
-    fetchImages();
+    fetchMoreImages();
   }, []);
+
+  async function fetchMoreImages() {
+    const response = await fetch("src/output.json");
+    const data = await response.json();
+    setImages((prevImages) => [...prevImages, ...data]);
+  }
+
+  useEffect(() => {
+    if (!IntersectionObserver) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          fetchMoreImages();
+        }
+      },
+      { threshold: 1 }
+    );
+
+    if (lastImageElement) {
+      observer.observe(lastImageElement);
+    }
+
+    return () => {
+      if (lastImageElement) {
+        observer.unobserve(lastImageElement);
+      }
+    };
+  }, [lastImageElement]);
 
   function togglePanel(downloadUrl, imgUrl, allTracks) {
     if (!showPanel) {
@@ -91,36 +118,36 @@ export default function Home() {
     }
   }
 
- async function loadAudio(url) {
-  setIsLoading(true);
-  if (!audioContextRef.current) {
-    return;
+  async function loadAudio(url) {
+    setIsLoading(true);
+    if (!audioContextRef.current) {
+      return;
+    }
+    const context = audioContextRef.current;
+    if (context.state === "suspended") {
+      await context.resume();
+    }
+
+    if (audioSourceRef.current) {
+      audioSourceRef.current.stop();
+      audioSourceRef.current.disconnect();
+    }
+
+    const source = context.createBufferSource();
+    source.connect(context.destination);
+    audioSourceRef.current = source;
+
+    // Load buffer
+    const response = await fetch(url);
+    const arrayBuffer = await response.arrayBuffer();
+    const audioBuffer = await context.decodeAudioData(arrayBuffer);
+
+    source.buffer = audioBuffer;
+    source.start(0);
+    source.loop = true;
+    setIsAudioPlaying(true);
+    setIsLoading(false); // Добавьте это
   }
-  const context = audioContextRef.current;
-  if (context.state === "suspended") {
-    await context.resume();
-  }
-
-  if (audioSourceRef.current) {
-    audioSourceRef.current.stop();
-    audioSourceRef.current.disconnect();
-  }
-
-  const source = context.createBufferSource();
-  source.connect(context.destination);
-  audioSourceRef.current = source;
-
-  // Load buffer
-  const response = await fetch(url);
-  const arrayBuffer = await response.arrayBuffer();
-  const audioBuffer = await context.decodeAudioData(arrayBuffer);
-
-  source.buffer = audioBuffer;
-  source.start(0);
-  source.loop = true;
-  setIsAudioPlaying(true);
-  setIsLoading(false); // Добавьте это
-}
 
   const play = (trackUri) => {
     setAudioState("PLAYING");
@@ -219,6 +246,7 @@ export default function Home() {
   }, [currentTrackIndex, images, allTracks, images_v]);
 
   function playNextTrack() {
+    trackHistory.push(currentTrackIndex);
     const nextTrackIndex =
       (currentTrackIndex + 1 + Math.floor(Math.random() * allTracks.length)) %
       allTracks.length;
@@ -226,53 +254,58 @@ export default function Home() {
   }
 
   function playPreviousTrack() {
-    const previousTrackIndex =
-      (currentTrackIndex -
-        1 -
-        Math.floor(Math.random() * allTracks.length) +
-        allTracks.length) %
-      allTracks.length;
-    playTrack(previousTrackIndex);
+    if (trackHistory.length > 0) {
+      const previousTrackIndex = trackHistory.pop();
+      playTrack(previousTrackIndex);
+    } else {
+      // Если нет истории, просто переключитесь на предыдущий трек в списке
+      const previousTrackIndex =
+        (currentTrackIndex - 1 + allTracks.length) % allTracks.length;
+      playTrack(previousTrackIndex);
+    }
   }
   // useEffect(() => {
   //   console.log("audioState:", audioState);
   //   console.log("isAudioPlaying:", isAudioPlaying);
   // }, [audioState, isAudioPlaying]);
   return (
-    <>
-      <audio
-        ref={dummyAudioElementRef}
-        src="https://github.com/anars/blank-audio/blob/master/15-seconds-of-silence.mp3?raw=true"
-      />
-      <div>
-        {images.length > 0 ? (
-          <ul>
-            {images.map((image) => (
-              <li key={image.id}>
-                <h2>{image.title}</h2>
-                <img
-                  src={image.field_image_field.und[0].uri}
-                  alt={image.title}
-                />
-                <button
-                  className="btn--panel-toggle"
-                  onClick={() =>
-                    togglePanel(
-                      image.field_mobile_looper.und,
-                      image.field_image_field.und[0].uri,
-                      allTracks
-                    )
-                  }
-                >
-                  Show tracks
-                </button>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>Loading images...</p>
-        )}
-      </div>
+  <>
+    <audio
+      ref={dummyAudioElementRef}
+      src="https://github.com/anars/blank-audio/blob/master/15-seconds-of-silence.mp3?raw=true"
+    />
+    <div>
+      {images.length > 0 ? (
+        <ul>
+          {images.map((image, index) => (
+            <li
+              key={image.id}
+              ref={index === images.length - 1 ? setLastImageElement : null}
+            >
+              <h2>{image.title}</h2>
+              <img
+                src={image.field_image_field.und[0].uri}
+                alt={image.title}
+              />
+              <button
+                className="btn--panel-toggle"
+                onClick={() =>
+                  togglePanel(
+                    image.field_mobile_looper.und,
+                    image.field_image_field.und[0].uri,
+                    allTracks
+                  )
+                }
+              >
+                Show tracks
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>Loading images...</p>
+      )}
+    </div>
       {showPanel && (
         <div className="panel">
           {tracks.map((track, index) => (
@@ -281,26 +314,25 @@ export default function Home() {
               <h3>{track.filename}</h3>
               <div className="controls">
                 <button
-  onClick={() => {
-    if (audioContextRef.current) {
-      if (audioContextRef.current.state === "suspended") {
-        audioContextRef.current.resume();
-      }
-    } else {
-      audioContextRef.current = new (window.AudioContext ||
-        window.webkitAudioContext)();
-    }
+                  onClick={() => {
+                    if (audioContextRef.current) {
+                      if (audioContextRef.current.state === "suspended") {
+                        audioContextRef.current.resume();
+                      }
+                    } else {
+                      audioContextRef.current = new (window.AudioContext ||
+                        window.webkitAudioContext)();
+                    }
 
-    if (isAudioPlaying) {
-      stop();
-    } else {
-      play(track.uri);
-    }
-  }}
->
-  {isAudioPlaying ? "Stop" : (isLoading ? "Загрузка..." : "Play")}
-</button>
-
+                    if (isAudioPlaying) {
+                      stop();
+                    } else {
+                      play(track.uri);
+                    }
+                  }}
+                >
+                  {isAudioPlaying ? "Stop" : isLoading ? "Загрузка..." : "Play"}
+                </button>
               </div>
             </div>
           ))}
