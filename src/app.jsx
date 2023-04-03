@@ -9,6 +9,7 @@ import Seo from "./components/seo.jsx";
 import Player from "./components/player.jsx";
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(false);
   const dummyAudioElementRef = useRef(null);
   const [audioState, setAudioState] = useState("STOPPED");
 
@@ -90,34 +91,36 @@ export default function Home() {
     }
   }
 
-  async function loadAudio(url) {
-    if (!audioContextRef.current) {
-      return;
-    }
-    const context = audioContextRef.current;
-    if (context.state === "suspended") {
-      await context.resume();
-    }
-
-    if (audioSourceRef.current) {
-      audioSourceRef.current.stop();
-      audioSourceRef.current.disconnect();
-    }
-
-    const source = context.createBufferSource();
-    source.connect(context.destination);
-    audioSourceRef.current = source;
-
-    // Load buffer
-    const response = await fetch(url);
-    const arrayBuffer = await response.arrayBuffer();
-    const audioBuffer = await context.decodeAudioData(arrayBuffer);
-
-    source.buffer = audioBuffer;
-    source.start(0);
-    source.loop = true;
-    setIsAudioPlaying(true);
+ async function loadAudio(url) {
+  setIsLoading(true);
+  if (!audioContextRef.current) {
+    return;
   }
+  const context = audioContextRef.current;
+  if (context.state === "suspended") {
+    await context.resume();
+  }
+
+  if (audioSourceRef.current) {
+    audioSourceRef.current.stop();
+    audioSourceRef.current.disconnect();
+  }
+
+  const source = context.createBufferSource();
+  source.connect(context.destination);
+  audioSourceRef.current = source;
+
+  // Load buffer
+  const response = await fetch(url);
+  const arrayBuffer = await response.arrayBuffer();
+  const audioBuffer = await context.decodeAudioData(arrayBuffer);
+
+  source.buffer = audioBuffer;
+  source.start(0);
+  source.loop = true;
+  setIsAudioPlaying(true);
+  setIsLoading(false); // Добавьте это
+}
 
   const play = (trackUri) => {
     setAudioState("PLAYING");
@@ -231,10 +234,10 @@ export default function Home() {
       allTracks.length;
     playTrack(previousTrackIndex);
   }
-  useEffect(() => {
-    console.log("audioState:", audioState);
-    console.log("isAudioPlaying:", isAudioPlaying);
-  }, [audioState, isAudioPlaying]);
+  // useEffect(() => {
+  //   console.log("audioState:", audioState);
+  //   console.log("isAudioPlaying:", isAudioPlaying);
+  // }, [audioState, isAudioPlaying]);
   return (
     <>
       <audio
@@ -277,14 +280,15 @@ export default function Home() {
               <img src={images_v} alt={`Cover of ${track.title}`} />
               <h3>{track.filename}</h3>
               <div className="controls">
-<button
+                <button
   onClick={() => {
     if (audioContextRef.current) {
       if (audioContextRef.current.state === "suspended") {
         audioContextRef.current.resume();
       }
     } else {
-      audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      audioContextRef.current = new (window.AudioContext ||
+        window.webkitAudioContext)();
     }
 
     if (isAudioPlaying) {
@@ -294,8 +298,9 @@ export default function Home() {
     }
   }}
 >
-  {isAudioPlaying ? "Pause" : "Play"}
+  {isAudioPlaying ? "Stop" : (isLoading ? "Загрузка..." : "Play")}
 </button>
+
               </div>
             </div>
           ))}
@@ -320,6 +325,7 @@ export default function Home() {
           )
         )}
         audioContextRef={audioContextRef}
+        isLoading={isLoading}
       />
     </>
   );

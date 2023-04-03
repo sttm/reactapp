@@ -8,20 +8,27 @@
 
 html,
 body {
-  margin: 0;
-  padding: 0;
+/*   margin: 0; */
+/*   padding: 0; */
+  overflow-x: hidden;
+  max-width: 100%;
 }
 body {
   font-family: HK Grotesk;
   background-color: var(--color-bg);
+  overflow-x: hidden; /* Добавьте это свойство */
 }
 a {
     font-size: 11px;
 }
 ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
+  width: inherit;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 li {
@@ -45,6 +52,7 @@ img {
   max-width: 100%;
 }
 :root {
+  
   --color-bg: #FFFFA0;
   --color-text-main: #000000;
   --color-primary: #AFECE0;
@@ -60,9 +68,10 @@ img {
   place-items: center;
   margin: 0 1rem;
   min-height: 86vh;
-  overflow-x: hidden;
+  overflow-x: hidden; /* Добавьте это свойство */
   max-width: 100%;
 }
+
 
 .playButton {
   display: inline-block;
@@ -191,13 +200,12 @@ font-size-adjust: 0.5;
   background-color: #D0FFF1;
 }
 
-/* Navigation grid */
 .footer {
   display: flex;
   justify-content: space-between;
   margin: 1rem auto 0;
   padding: 1rem 0 0.75rem 0;
-  width: 100%;
+  width: calc(100% - 2rem); /* Измените это свойство */
   flex-wrap: wrap;
   border-top: 4px solid #fff;
 }
@@ -270,3 +278,25 @@ a:not(.btn--remix):visited {
 h2 {
   color: #2800FF;
 }
+/* @media screen and (max-width: 767px) {
+  ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  li {
+    width: 100%;
+    padding: 10px;
+    background-color: #f7f7f7;
+    border-radius: 5px;
+    max-width: 300px;
+    list-style-type: none;
+    margin: 50px 0;
+  }
+
+  .wrapper {
+    padding: 0 20px;
+  }
+} */
