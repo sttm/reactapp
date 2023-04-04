@@ -107,7 +107,7 @@
   font-size-adjust: 0.5;
 }
 .app__menu {
-    right: 5px;
+    right: 20px;
     position: fixed;
     bottom: 65px;
     /* background-color: #ffffff; */

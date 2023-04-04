@@ -9,40 +9,34 @@ import Seo from "./components/seo.jsx";
 import Player from "./components/player.jsx";
 
 export default function Home() {
-  const [audioState, setAudioState] = useState("STOPPED");
-  const [checkboxChecked, setCheckboxChecked] = useState(false);
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  const [menuVisible, setMenuVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [showPanel, setShowPanel] = useState(false);
-  const [lastImageElement, setLastImageElement] = useState(null);
   const dummyAudioElementRef = useRef(null);
+  const [audioState, setAudioState] = useState("STOPPED");
+
   const audioContextRef = useRef(null);
   const audioSourceRef = useRef(null);
-  const gainNodeRef = useRef(null);
-
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [showPanel, setShowPanel] = useState(false);
   const [tracks, setTracks] = useState([]);
   const [images, setImages] = useState([]);
   const [allTracks, setAllTracks] = useState([]);
   const [images_v, setImagesV] = useState([]);
-  const trackHistory = [];
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  // const trackHistory = [];
+  const [lastImageElement, setLastImageElement] = useState(null);
+  const [menuVisible, setMenuVisible] = useState(false);
   const [volume, setVolume] = useState(1);
   const [playbackRate, setPlaybackRate] = useState(1);
-  const [timerDuration, setTimerDuration] = useState(20 * 1000); // default 20 seconds
-  const [audioIndex, setAudioIndex] = useState(0);
-  const timerRef = useRef(null);
+  const [checkboxChecked, setCheckboxChecked] = useState(false);
+    const [theme, setTheme] = useState("light");
 
-  function handleVolumeChange(e) {
-    const maxGain = 1; // Максимальное значение усиления. Установите значение ниже 1, чтобы снизить максимальную громкость.
-    const newVolume = (e.target.value / 100) * maxGain;
-    setVolume(newVolume);
-    if (gainNodeRef.current) {
-      gainNodeRef.current.gain.value = newVolume;
-    }
+  function changeTheme(newTheme) {
+    setTheme(newTheme);
   }
 
-  let trackTimer;
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
   function handleScroll() {
     setShowPanel(false);
     setMenuVisible(false);
@@ -61,7 +55,7 @@ export default function Home() {
     fetchMoreImages();
   }, []);
 
-  async function fetchMoreImages() {
+ async function fetchMoreImages() {
     let data;
     try {
       const response1 = await fetch("src/output.json");
@@ -121,14 +115,6 @@ export default function Home() {
       setShowPanel(false);
     }
   }
-  useEffect(() => {
-    if (audioSourceRef.current && audioContextRef.current) {
-      const gainNode = audioContextRef.current.createGain();
-      gainNode.gain.value = volume;
-      audioSourceRef.current.connect(gainNode);
-      gainNode.connect(audioContextRef.current.destination);
-    }
-  }, [volume]);
 
   // Create an audio context if one doesn't already exist
   function createAudioContext() {
@@ -138,18 +124,12 @@ export default function Home() {
     }
   }
 
-  function playTrack(trackIndex, timerDuration) {
+  function playTrack(trackIndex) {
     const track = allTracks[trackIndex];
     setAudioState("PLAYING");
     loadAudio(track.uri);
     createAudioContext();
     setCurrentTrackIndex(trackIndex);
-
-    // Schedule next track after timerDuration
-    setTimeout(() => {
-      const nextTrackIndex = (trackIndex + 1) % allTracks.length;
-      playTrack(nextTrackIndex, timerDuration);
-    }, timerDuration);
   }
 
   function setCurrentTrackIndexFromPlayer(newIndex) {
@@ -181,15 +161,8 @@ export default function Home() {
     }
 
     const source = context.createBufferSource();
+    source.connect(context.destination);
     audioSourceRef.current = source;
-
-    // Создаем и подключаем gainNode
-    if (!gainNodeRef.current) {
-      gainNodeRef.current = context.createGain();
-    }
-    gainNodeRef.current.gain.value = volume;
-    source.connect(gainNodeRef.current);
-    gainNodeRef.current.connect(context.destination);
 
     // Load buffer
     const response = await fetch(url);
@@ -200,7 +173,7 @@ export default function Home() {
     source.start(0);
     source.loop = true;
     setIsAudioPlaying(true);
-    setIsLoading(false);
+    setIsLoading(false); // Добавьте это
   }
 
   const play = (trackUri) => {
@@ -209,15 +182,6 @@ export default function Home() {
     if (isAudioPlaying) return;
     loadAudio(trackUri);
     setIsAudioPlaying(true);
-
-    // Если таймер включен, установите таймер для автоматического переключения трека
-    if (checkboxChecked) {
-      clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => {
-        setIsAudioPlaying(false);
-        setAudioIndex((currentIndex) => (currentIndex + 1) % tracks.length);
-      }, timerDuration);
-    }
   };
 
   useEffect(() => {
@@ -309,7 +273,7 @@ export default function Home() {
   }, [currentTrackIndex, images, allTracks, images_v]);
 
   function playNextTrack() {
-    trackHistory.push(currentTrackIndex);
+    // trackHistory.push(currentTrackIndex);
     const nextTrackIndex =
       (currentTrackIndex + 1 + Math.floor(Math.random() * allTracks.length)) %
       allTracks.length;
@@ -317,18 +281,17 @@ export default function Home() {
   }
 
   function playPreviousTrack() {
-    if (trackHistory.length > 0) {
-      const previousTrackIndex = trackHistory.pop();
-      playTrack(previousTrackIndex);
-    } else {
-      // Если нет истории, просто переключитесь на предыдущий трек в списке
       const previousTrackIndex =
         (currentTrackIndex - 1 + allTracks.length) % allTracks.length;
       playTrack(previousTrackIndex);
-    }
   }
-  function toggleMenu() {
-    setMenuVisible((prevState) => !prevState);
+  
+    function toggleMenu() {
+  setMenuVisible((prevState) => !prevState);
+}
+  function handleVolumeChange(e) {
+    const newVolume = e.target.value;
+    setVolume(newVolume);
   }
 
   function handlePlaybackRateChange(e) {
@@ -339,25 +302,11 @@ export default function Home() {
   function handleCheckboxChange(e) {
     setCheckboxChecked(e.target.checked);
   }
-
-  function handleTimerChange(value) {
-    setTimerDuration(value);
-  }
-
-  const [theme, setTheme] = useState("light");
-
-  function changeTheme(newTheme) {
-    setTheme(newTheme);
-  }
-
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-  }, [theme]);
   // useEffect(() => {
   //   console.log("audioState:", audioState);
   //   console.log("isAudioPlaying:", isAudioPlaying);
   // }, [audioState, isAudioPlaying]);
-  return (
+   return (
     <>
       <audio
         ref={dummyAudioElementRef}
@@ -420,7 +369,7 @@ export default function Home() {
                     }
                   }}
                 >
-                  {isAudioPlaying ? "Stop" : isLoading ? "Wait" : "Play"}
+                  {isAudioPlaying ? "Stop" : isLoading ? "Загрузка..." : "Play"}
                 </button>
               </div>
             </div>
@@ -431,7 +380,7 @@ export default function Home() {
         <PageRouter path="/pages/:pageName" />
       </Router>
       <Seo />
-      {menuVisible && (
+       {menuVisible && (
         <div className="app__menu">
           <div className="app__menu-item">
             <label htmlFor="volume">Volume</label>
@@ -464,7 +413,7 @@ export default function Home() {
               id="timer"
               min="1"
               step="1"
-              onChange={(e) => setTimerDuration(e.target.value * 60 * 1000)}
+              
             />
           </div>
           <div className="app__menu-item app__menu-item-separator">
@@ -505,9 +454,11 @@ export default function Home() {
         )}
         audioContextRef={audioContextRef}
         isLoading={isLoading}
-        toggleMenu={toggleMenu}
-        menuVisible={menuVisible}
+        
+  toggleMenu={toggleMenu}
+  menuVisible={menuVisible}
       />
     </>
   );
 }
+//  onChange={(e) => setTimerDuration(e.target.value * 60 * 1000)}
