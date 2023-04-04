@@ -356,6 +356,8 @@ a:not(.btn--remix):visited {
   /* CSS rules for screens with max-width of 600px */
   .looper-list li {
     width: calc(35% - 2rem);
+        padding: 0;
+    margin: 4%;
   }
     h2 {
     font-size: smaller;
@@ -369,6 +371,7 @@ a:not(.btn--remix):visited {
 
   .looper-list li {
     width: calc(30% - 2rem);
+
   }
 }
 
