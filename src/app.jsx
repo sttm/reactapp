@@ -27,9 +27,15 @@ export default function Home() {
   const [menuVisible, setMenuVisible] = useState(false);
   const [volume, setVolume] = useState(1);
   const [playbackRate, setPlaybackRate] = useState(1);
-  const [checkboxChecked, setCheckboxChecked] = useState(false);
-    const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("light");
+const intervals = [1, 2, 5, 10, 15, 20, 30, "disabled"];
+const [currentInterval, setCurrentInterval] = useState("disabled");
 
+const handleButtonClick = () => {
+  const currentIndex = intervals.indexOf(currentInterval);
+  const nextIndex = (currentIndex + 1) % intervals.length;
+  setCurrentInterval(intervals[nextIndex]);
+};
   function changeTheme(newTheme) {
     setTheme(newTheme);
   }
@@ -55,7 +61,7 @@ export default function Home() {
     fetchMoreImages();
   }, []);
 
- async function fetchMoreImages() {
+  async function fetchMoreImages() {
     let data;
     try {
       const response1 = await fetch("src/output.json");
@@ -281,14 +287,14 @@ export default function Home() {
   }
 
   function playPreviousTrack() {
-      const previousTrackIndex =
-        (currentTrackIndex - 1 + allTracks.length) % allTracks.length;
-      playTrack(previousTrackIndex);
+    const previousTrackIndex =
+      (currentTrackIndex - 1 + allTracks.length) % allTracks.length;
+    playTrack(previousTrackIndex);
   }
-  
-    function toggleMenu() {
-  setMenuVisible((prevState) => !prevState);
-}
+
+  function toggleMenu() {
+    setMenuVisible((prevState) => !prevState);
+  }
   function handleVolumeChange(e) {
     const newVolume = e.target.value;
     setVolume(newVolume);
@@ -299,14 +305,37 @@ export default function Home() {
     setPlaybackRate(newPlaybackRate);
   }
 
-  function handleCheckboxChange(e) {
-    setCheckboxChecked(e.target.checked);
+
+  
+useEffect(() => {
+  let intervalId;
+
+  if (allTracks.length > 0 && currentInterval !== "disabled") {
+    intervalId = setInterval(playRandomTrack, currentInterval * 60 * 1000);
   }
+
+  return () => {
+    if (intervalId) {
+      clearInterval(intervalId);
+    }
+  };
+}, [allTracks, currentInterval]);
+  
+  
+  const playRandomTrack = () => {
+    if (allTracks.length > 0) {
+      const randomTrackIndex = Math.floor(Math.random() * allTracks.length);
+      console.log("RandomTrack");
+      playTrack(randomTrackIndex);
+    } else {
+      console.warn("allTracks is empty or not set.");
+    }
+  };
   // useEffect(() => {
   //   console.log("audioState:", audioState);
   //   console.log("isAudioPlaying:", isAudioPlaying);
   // }, [audioState, isAudioPlaying]);
-   return (
+  return (
     <>
       <audio
         ref={dummyAudioElementRef}
@@ -380,7 +409,7 @@ export default function Home() {
         <PageRouter path="/pages/:pageName" />
       </Router>
       <Seo />
-       {menuVisible && (
+      {menuVisible && (
         <div className="app__menu">
           <div className="app__menu-item">
             <label htmlFor="volume">Volume</label>
@@ -406,25 +435,13 @@ export default function Home() {
               onChange={(e) => setPlaybackRate(e.target.value)}
             />
           </div>
-          <div className="app__menu-item">
-            <label htmlFor="timer">Minutes </label>
-            <input
-              type="number"
-              id="timer"
-              min="1"
-              step="1"
-              
-            />
-          </div>
           <div className="app__menu-item app__menu-item-separator">
-            <label htmlFor="checkbox">On Timer</label>
-            <input
-              type="checkbox"
-              id="checkbox"
-              checked={checkboxChecked}
-              onChange={handleCheckboxChange}
-            />
+            <label htmlFor="timer">Timer </label>
+            <button onClick={handleButtonClick}>
+    {currentInterval === "disabled" ? "Disabled" : `${currentInterval} min`}
+            </button>
           </div>
+
           <div className="app__menu-item">
             <label htmlFor="theme">Theme</label>
             <select
@@ -454,11 +471,10 @@ export default function Home() {
         )}
         audioContextRef={audioContextRef}
         isLoading={isLoading}
-        
-  toggleMenu={toggleMenu}
-  menuVisible={menuVisible}
+        toggleMenu={toggleMenu}
+        menuVisible={menuVisible}
+        playRandomTrack={playRandomTrack}
       />
     </>
   );
 }
-//  onChange={(e) => setTimerDuration(e.target.value * 60 * 1000)}

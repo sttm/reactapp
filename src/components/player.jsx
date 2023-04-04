@@ -19,6 +19,7 @@ export default function Player({
   audioContextRef,
   isLoading,
   toggleMenu,
+  playRandomTrack,
 }) {
   const audioRef = useRef(null);
   const [menuVisible, setMenuVisible] = useState(false);
@@ -26,6 +27,7 @@ export default function Player({
   const [checkboxChecked, setCheckboxChecked] = useState(false);
   const [trackTimer, setTrackTimer] = useState(null);
   const [timerDuration, setTimerDuration] = useState(0);
+  
 const [fontSize, setFontSize] = useState('75%');
 
 const adjustFontSize = (text) => {
@@ -90,15 +92,6 @@ function togglePlay() {
     }
     play(allTracks[currentTrackIndex].uri);
 
-    if (checkboxChecked) {
-      trackTimer = setTimeout(() => {
-        if (currentTrackIndex < allTracks.length - 1) {
-          setCurrentTrackIndex(currentTrackIndex + 1);
-        } else {
-          setCurrentTrackIndex(0);
-        }
-      }, timerDuration * 60 * 1000);
-    }
   }
 }
 
@@ -138,9 +131,7 @@ function togglePlay() {
           </button>
         )}
         <button
-          onClick={() =>
-            setCurrentTrackIndex(Math.floor(Math.random() * allTracks.length))
-          }
+          onClick={playRandomTrack}
         >
           <FontAwesomeIcon icon={faRedo} />
         </button>
