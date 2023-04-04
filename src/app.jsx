@@ -28,8 +28,8 @@ export default function Home() {
   const [volume, setVolume] = useState(1);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [theme, setTheme] = useState("light");
-const intervals = [1, 2, 5, 10, 15, 20, 30, "disabled"];
-const [currentInterval, setCurrentInterval] = useState("disabled");
+const intervals = [1, 2, 5, 10, 15, 20, 30, "off"];
+const [currentInterval, setCurrentInterval] = useState("off");
 
 const handleButtonClick = () => {
   const currentIndex = intervals.indexOf(currentInterval);
@@ -310,7 +310,7 @@ const handleButtonClick = () => {
 useEffect(() => {
   let intervalId;
 
-  if (allTracks.length > 0 && currentInterval !== "disabled") {
+  if (allTracks.length > 0 && currentInterval !== "off") {
     intervalId = setInterval(playRandomTrack, currentInterval * 60 * 1000);
   }
 
@@ -438,7 +438,7 @@ useEffect(() => {
           <div className="app__menu-item app__menu-item-separator">
             <label htmlFor="timer">Timer </label>
             <button onClick={handleButtonClick}>
-    {currentInterval === "disabled" ? "Disabled" : `${currentInterval} min`}
+    {currentInterval === "off" ? "off" : `${currentInterval} min`}
             </button>
           </div>
 
