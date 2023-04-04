@@ -24,7 +24,13 @@ export default function Home() {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const trackHistory = [];
   const [lastImageElement, setLastImageElement] = useState(null);
+    const [menuVisible, setMenuVisible] = useState(false);
+  const [volume, setVolume] = useState(1);
+  const [playbackRate, setPlaybackRate] = useState(1);
+  const [timerDuration, setTimerDuration] = useState(20 * 1000); // default 20 seconds
+  const [checkboxChecked, setCheckboxChecked] = useState(false);
 
+  let trackTimer;
   function handleScroll() {
     setShowPanel(false);
   }
@@ -97,13 +103,19 @@ export default function Home() {
     }
   }
 
-  function playTrack(trackIndex) {
-    const track = allTracks[trackIndex];
-    setAudioState("PLAYING");
-    loadAudio(track.uri);
-    createAudioContext();
-    setCurrentTrackIndex(trackIndex);
-  }
+  function playTrack(trackIndex, timerDuration) {
+  const track = allTracks[trackIndex];
+  setAudioState("PLAYING");
+  loadAudio(track.uri);
+  createAudioContext();
+  setCurrentTrackIndex(trackIndex);
+  
+  // Schedule next track after timerDuration
+  setTimeout(() => {
+    const nextTrackIndex = (trackIndex + 1) % allTracks.length;
+    playTrack(nextTrackIndex, timerDuration);
+  }, timerDuration);
+}
 
   function setCurrentTrackIndexFromPlayer(newIndex) {
     setCurrentTrackIndex(newIndex);
@@ -264,48 +276,68 @@ export default function Home() {
       playTrack(previousTrackIndex);
     }
   }
+  function toggleMenu() {
+  setMenuVisible((prevState) => !prevState);
+}
+  function handleVolumeChange(e) {
+    const newVolume = e.target.value;
+    setVolume(newVolume);
+  }
+
+  function handlePlaybackRateChange(e) {
+    const newPlaybackRate = e.target.value;
+    setPlaybackRate(newPlaybackRate);
+  }
+
+  function handleCheckboxChange(e) {
+    setCheckboxChecked(e.target.checked);
+  }
+
+  function handleTimerChange(value) {
+    setTimerDuration(value);
+  }
   // useEffect(() => {
   //   console.log("audioState:", audioState);
   //   console.log("isAudioPlaying:", isAudioPlaying);
   // }, [audioState, isAudioPlaying]);
   return (
-  <>
-    <audio
-      ref={dummyAudioElementRef}
-      src="https://github.com/anars/blank-audio/blob/master/15-seconds-of-silence.mp3?raw=true"
-    />
-    <div>
-      {images.length > 0 ? (
-        <ul>
-          {images.map((image, index) => (
-            <li
-              key={image.id}
-              ref={index === images.length - 1 ? setLastImageElement : null}
-            >
-              <h2>{image.title}</h2>
-              <img
-                src={image.field_image_field.und[0].uri}
-                alt={image.title}
-              />
-              <button
-                className="btn--panel-toggle"
-                onClick={() =>
-                  togglePanel(
-                    image.field_mobile_looper.und,
-                    image.field_image_field.und[0].uri,
-                    allTracks
-                  )
-                }
+    <>
+      <audio
+        ref={dummyAudioElementRef}
+        src="https://github.com/anars/blank-audio/blob/master/15-seconds-of-silence.mp3?raw=true"
+      />
+      <div>
+        {images.length > 0 ? (
+          <ul className="looper-list">
+            {images.map((image, index) => (
+              <li
+                key={`${image.id}-${index}`} // Use a unique key by combining the image id and index
+                ref={index === images.length - 1 ? setLastImageElement : null}
               >
-                Show tracks
-              </button>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>Loading images...</p>
-      )}
-    </div>
+                <h2>{image.title}</h2>
+                <img
+                  src={image.field_image_field.und[0].uri}
+                  alt={image.title}
+                />
+                <button
+                  className="btn--panel-toggle"
+                  onClick={() =>
+                    togglePanel(
+                      image.field_mobile_looper.und,
+                      image.field_image_field.und[0].uri,
+                      allTracks
+                    )
+                  }
+                >
+                  Show tracks
+                </button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>Loading images...</p>
+        )}
+      </div>
       {showPanel && (
         <div className="panel">
           {tracks.map((track, index) => (
@@ -342,6 +374,53 @@ export default function Home() {
         <PageRouter path="/pages/:pageName" />
       </Router>
       <Seo />
+      {menuVisible && (
+  <div className="app__menu">
+    <div className="app__menu-item">
+      <label htmlFor="volume">Volume</label>
+      <input
+        type="range"
+        id="volume"
+        min="0"
+        max="1"
+        step="0.01"
+        value={volume}
+        onChange={handleVolumeChange}
+      />
+    </div>
+    <div className="app__menu-item">
+      <label htmlFor="playbackRate">Speed</label>
+      <input
+        type="range"
+        id="playbackRate"
+        min="0.5"
+        max="2"
+        step="0.01"
+        value={playbackRate}
+        onChange={handlePlaybackRateChange}
+      />
+    </div>
+    <div className="app__menu-item">
+      <label htmlFor="timer">Minutes  </label>
+      <input
+        type="number"
+        id="timer"
+        min="1"
+        step="1"
+        onChange={(e) => setTimerDuration(e.target.value * 60 * 1000)}
+      />
+    </div>
+    <div className="app__menu-item">
+      <label htmlFor="checkbox">On Timer</label>
+      <input
+        type="checkbox"
+        id="checkbox"
+        checked={checkboxChecked}
+        onChange={handleCheckboxChange}
+      />
+    </div>
+  </div>
+)}
       <Player
         allTracks={allTracks}
         isAudioPlaying={isAudioPlaying}
@@ -358,6 +437,9 @@ export default function Home() {
         )}
         audioContextRef={audioContextRef}
         isLoading={isLoading}
+        
+  toggleMenu={toggleMenu}
+  menuVisible={menuVisible}
       />
     </>
   );

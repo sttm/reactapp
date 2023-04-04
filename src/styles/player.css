@@ -63,16 +63,17 @@
   font-size: 10px;
   font-size-adjust: 0.5;
 }
-.player__menu {
-  right: 10px;
-  position: absolute;
-  top: -100px;
-  background-color: #ffffff;
-  border: 1px solid #cccccc;
-  border-radius: 5px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
+.app__menu {
+    right: 10px;
+    position: fixed;
+    bottom: 50px;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
 }
 
 .player__menu-item {

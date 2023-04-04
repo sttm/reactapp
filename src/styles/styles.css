@@ -1,4 +1,4 @@
-/* Import fonts */
+/* styles.css */
 @font-face {
   font-family: HK Grotesk;
   src: url("https://cdn.glitch.me/605e2a51-d45f-4d87-a285-9410ad350515%2FHKGrotesk-Regular.otf?v=1603136326027")
@@ -279,7 +279,7 @@ h2 {
 /*   color: #2800FF; */
   text-align: center;
 }
-/* @media screen and (max-width: 767px) {
+@media screen and (max-width: 767px) {
   ul {
     display: flex;
     flex-direction: column;
@@ -300,4 +300,4 @@ h2 {
   .wrapper {
     padding: 0 20px;
   }
-} */
+}

@@ -1,7 +1,12 @@
-//player.jsx
+/*/components/player.jsx*/
 import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay, faStop, faRedo, faCog } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlay,
+  faStop,
+  faRedo,
+  faCog,
+} from "@fortawesome/free-solid-svg-icons";
 export default function Player({
   allTracks,
   isAudioPlaying,
@@ -13,34 +18,42 @@ export default function Player({
   currentImage,
   audioContextRef,
   isLoading,
+  toggleMenu,
 }) {
   const audioRef = useRef(null);
-const [menuVisible, setMenuVisible] = useState(false);
-const [volume, setVolume] = useState(1);
-const [playbackRate, setPlaybackRate] = useState(1);
-const [checkboxChecked, setCheckboxChecked] = useState(false);
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [volume, setVolume] = useState(1);
+  const [playbackRate, setPlaybackRate] = useState(1);
+  const [checkboxChecked, setCheckboxChecked] = useState(false);
+  const [trackTimer, setTrackTimer] = useState(null);
+  const [timerDuration, setTimerDuration] = useState(0);
+
+  function handleTimerDurationChange(e) {
+    setTimerDuration(e.target.value);
+  }
   function handleVolumeChange(e) {
-  const newVolume = e.target.value;
-  setVolume(newVolume);
-  if (audioContextRef.current) {
-    audioContextRef.current.destination.gain.value = newVolume;
+    const newVolume = e.target.value;
+    setVolume(newVolume);
+    if (audioContextRef.current) {
+      audioContextRef.current.destination.gain.value = newVolume;
+    }
   }
-}
 
-function handlePlaybackRateChange(e) {
-  const newPlaybackRate = e.target.value;
-  setPlaybackRate(newPlaybackRate);
-  if (audioContextRef.current) {
-    audioContextRef.current.playbackRate.value = newPlaybackRate;
+  function handlePlaybackRateChange(e) {
+    const newPlaybackRate = e.target.value;
+    setPlaybackRate(newPlaybackRate);
+    if (audioContextRef.current) {
+      audioContextRef.current.playbackRate.value = newPlaybackRate;
+    }
   }
-}
 
-function handleCheckboxChange(e) {
-  setCheckboxChecked(e.target.checked);
-}
+  function handleCheckboxChange(e) {
+    setCheckboxChecked(e.target.checked);
+  }
   // Play next track when current one finishes
   useEffect(() => {
     function handleEnded() {
+      clearTimeout(trackTimer);
       if (currentTrackIndex < allTracks.length - 1) {
         setCurrentTrackIndex(currentTrackIndex + 1);
       } else {
@@ -70,8 +83,28 @@ function togglePlay() {
       audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
     }
     play(allTracks[currentTrackIndex].uri);
+
+    if (checkboxChecked) {
+      trackTimer = setTimeout(() => {
+        if (currentTrackIndex < allTracks.length - 1) {
+          setCurrentTrackIndex(currentTrackIndex + 1);
+        } else {
+          setCurrentTrackIndex(0);
+        }
+      }, timerDuration * 60 * 1000);
+    }
   }
 }
+
+  function playTrack(trackIndex, timerDuration) {
+    // ... play the track here
+    setTrackTimer(
+      setTimeout(() => {
+        // Switch to the next track when the timer ends
+        setCurrentTrackIndex(currentTrackIndex + 1);
+      }, timerDuration * 1000)
+    );
+  }
 
   return (
     <div className="player">
@@ -84,65 +117,35 @@ function togglePlay() {
               className="player__album-art"
             />
             <div>
-            <div className="player__title">{currentTrack.title_album}</div>
-            <div className="player__artist">{currentTrack.filename}</div>
+              <div className="player__title">{currentTrack.title_album}</div>
+              <div className="player__artist">{currentTrack.filename}</div>
             </div>
           </>
         )}
       </div>
       <div className="player__controls">
-        
-{isLoading ? (
-  <div className="loading-indicator"></div>
-) : (
-  <button onClick={togglePlay}>
-    <FontAwesomeIcon icon={isAudioPlaying ? faStop : faPlay} />
-  </button>
-)}
-<button onClick={() => setCurrentTrackIndex(Math.floor(Math.random() * allTracks.length))}>
-  <FontAwesomeIcon icon={faRedo} />
-</button>
-<button onClick={() => setMenuVisible(!menuVisible)}>
+        {isLoading ? (
+          <div className="loading-indicator"></div>
+        ) : (
+          <button onClick={togglePlay}>
+            <FontAwesomeIcon icon={isAudioPlaying ? faStop : faPlay} />
+          </button>
+        )}
+        <button
+          onClick={() =>
+            setCurrentTrackIndex(Math.floor(Math.random() * allTracks.length))
+          }
+        >
+          <FontAwesomeIcon icon={faRedo} />
+        </button>
+<button onClick={() => {
+  toggleMenu();
+  setMenuVisible((prevState) => !prevState);
+}}>
   <FontAwesomeIcon icon={faCog} />
 </button>
       </div>
-      {menuVisible && (
-  <div className="player__menu">
-    <div className="player__menu-item">
-      <label htmlFor="volume">Volume</label>
-      <input
-        type="range"
-        id="volume"
-        min="0"
-        max="1"
-        step="0.01"
-        value={volume}
-        onChange={handleVolumeChange}
-      />
-    </div>
-    <div className="player__menu-item">
-      <label htmlFor="playbackRate">Speed</label>
-      <input
-        type="range"
-        id="playbackRate"
-        min="0.5"
-        max="2"
-        step="0.01"
-        value={playbackRate}
-        onChange={handlePlaybackRateChange}
-      />
-    </div>
-    <div className="player__menu-item">
-      <label htmlFor="checkbox">Checkbox</label>
-      <input
-        type="checkbox"
-        id="checkbox"
-        checked={checkboxChecked}
-        onChange={handleCheckboxChange}
-      />
-    </div>
-  </div>
-)}
+      
       <audio id="audio-element" ref={audioRef} />
     </div>
   );
