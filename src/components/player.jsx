@@ -22,22 +22,28 @@ export default function Player({
 }) {
   const audioRef = useRef(null);
   const [menuVisible, setMenuVisible] = useState(false);
-  const [volume, setVolume] = useState(1);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [checkboxChecked, setCheckboxChecked] = useState(false);
   const [trackTimer, setTrackTimer] = useState(null);
   const [timerDuration, setTimerDuration] = useState(0);
+const [fontSize, setFontSize] = useState('75%');
+
+const adjustFontSize = (text) => {
+  const length = text.length;
+
+  if (length < 10) {
+    setFontSize('100%');
+  } else if (length < 20) {
+    setFontSize('75%');
+  } else {
+    setFontSize('50%');
+  }
+};
 
   function handleTimerDurationChange(e) {
     setTimerDuration(e.target.value);
   }
-  function handleVolumeChange(e) {
-    const newVolume = e.target.value;
-    setVolume(newVolume);
-    if (audioContextRef.current) {
-      audioContextRef.current.destination.gain.value = newVolume;
-    }
-  }
+
 
   function handlePlaybackRateChange(e) {
     const newPlaybackRate = e.target.value;
@@ -116,9 +122,9 @@ function togglePlay() {
               alt={`Cover of ${currentTrack.title_album}`}
               className="player__album-art"
             />
-            <div>
-              <div className="player__title">{currentTrack.title_album}</div>
-              <div className="player__artist">{currentTrack.filename}</div>
+            <div className="player_all_title">
+              <p className="player__title" style={{ fontSize }}>{currentTrack.title_album}</p>
+              <p className="player__artist" style={{ fontSize }}>{currentTrack.filename}</p>
             </div>
           </>
         )}

@@ -1,11 +1,54 @@
+
+
 /* player.css */
+
+
+[data-theme="light"] .player {
+  background-color: #f5f5f5;
+}
+/* Цвет фона для .player в темной теме */
+[data-theme="dark"] .player {
+  background-color: var(--color-bg-dark);
+}
+
+[data-theme="light"] .app__menu {
+  background-color: #f5f5f5;
+}
+/* Цвет фона для .player в темной теме */
+[data-theme="dark"] .app__menu {
+  background-color: var(--color-bg-dark);
+}
+
+[data-theme="light"] .loading-indicator {
+  border-left-color: #333;
+}
+/* Цвет фона для .player в темной теме */
+[data-theme="dark"] .loading-indicator {
+  border-left-color: #fff;
+}
+
+[data-theme="dark"] .player__controls button {
+    background-color: #606060;
+    border-radius: 0;  
+}
+
+.player_all_title {
+  height: 0px;
+    width: 100%;
+}
+
+.player_all_title p {
+  margin: 0;
+  padding: 0;
+/*   font-size: 75%;  */
+}
 .player {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   height: 60px;
-  background-color: #f5f5f5;
+/*   background-color: #f5f5f5; */
   border-top: 1px solid #ccc;
   display: flex;
   align-items: center;
@@ -64,10 +107,10 @@
   font-size-adjust: 0.5;
 }
 .app__menu {
-    right: 10px;
+    right: 5px;
     position: fixed;
-    bottom: 50px;
-    background-color: #ffffff;
+    bottom: 65px;
+    /* background-color: #ffffff; */
     border: 1px solid #cccccc;
     border-radius: 5px;
     padding: 8px;

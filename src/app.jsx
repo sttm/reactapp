@@ -9,30 +9,43 @@ import Seo from "./components/seo.jsx";
 import Player from "./components/player.jsx";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(false);
-  const dummyAudioElementRef = useRef(null);
   const [audioState, setAudioState] = useState("STOPPED");
-
+  const [checkboxChecked, setCheckboxChecked] = useState(false);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPanel, setShowPanel] = useState(false);
+  const [lastImageElement, setLastImageElement] = useState(null);
+  const dummyAudioElementRef = useRef(null);
   const audioContextRef = useRef(null);
   const audioSourceRef = useRef(null);
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  const [showPanel, setShowPanel] = useState(false);
+const gainNodeRef = useRef(null);
+
   const [tracks, setTracks] = useState([]);
   const [images, setImages] = useState([]);
   const [allTracks, setAllTracks] = useState([]);
   const [images_v, setImagesV] = useState([]);
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const trackHistory = [];
-  const [lastImageElement, setLastImageElement] = useState(null);
-    const [menuVisible, setMenuVisible] = useState(false);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [volume, setVolume] = useState(1);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [timerDuration, setTimerDuration] = useState(20 * 1000); // default 20 seconds
-  const [checkboxChecked, setCheckboxChecked] = useState(false);
+  const [audioIndex, setAudioIndex] = useState(0);
+const timerRef = useRef(null);
+  
+function handleVolumeChange(e) {
+  const maxGain = 1; // Максимальное значение усиления. Установите значение ниже 1, чтобы снизить максимальную громкость.
+  const newVolume = e.target.value / 100 * maxGain;
+  setVolume(newVolume);
+  if (gainNodeRef.current) {
+    gainNodeRef.current.gain.value = newVolume;
+  }
+}
 
   let trackTimer;
   function handleScroll() {
     setShowPanel(false);
+    setMenuVisible(false);
   }
 
   // Add scroll event listener to window object
@@ -94,6 +107,14 @@ export default function Home() {
       setShowPanel(false);
     }
   }
+useEffect(() => {
+  if (audioSourceRef.current && audioContextRef.current) {
+    const gainNode = audioContextRef.current.createGain();
+    gainNode.gain.value = volume;
+    audioSourceRef.current.connect(gainNode);
+    gainNode.connect(audioContextRef.current.destination);
+  }
+}, [volume]);
 
   // Create an audio context if one doesn't already exist
   function createAudioContext() {
@@ -131,43 +152,61 @@ export default function Home() {
   }
 
   async function loadAudio(url) {
-    setIsLoading(true);
-    if (!audioContextRef.current) {
-      return;
-    }
-    const context = audioContextRef.current;
-    if (context.state === "suspended") {
-      await context.resume();
-    }
-
-    if (audioSourceRef.current) {
-      audioSourceRef.current.stop();
-      audioSourceRef.current.disconnect();
-    }
-
-    const source = context.createBufferSource();
-    source.connect(context.destination);
-    audioSourceRef.current = source;
-
-    // Load buffer
-    const response = await fetch(url);
-    const arrayBuffer = await response.arrayBuffer();
-    const audioBuffer = await context.decodeAudioData(arrayBuffer);
-
-    source.buffer = audioBuffer;
-    source.start(0);
-    source.loop = true;
-    setIsAudioPlaying(true);
-    setIsLoading(false); // Добавьте это
+  setIsLoading(true);
+  if (!audioContextRef.current) {
+    return;
+  }
+  const context = audioContextRef.current;
+  if (context.state === "suspended") {
+    await context.resume();
   }
 
-  const play = (trackUri) => {
-    setAudioState("PLAYING");
+  if (audioSourceRef.current) {
+    audioSourceRef.current.stop();
+    audioSourceRef.current.disconnect();
+  }
 
-    if (isAudioPlaying) return;
-    loadAudio(trackUri);
-    setIsAudioPlaying(true);
-  };
+  const source = context.createBufferSource();
+  audioSourceRef.current = source;
+
+  // Создаем и подключаем gainNode
+  if (!gainNodeRef.current) {
+    gainNodeRef.current = context.createGain();
+  }
+  gainNodeRef.current.gain.value = volume;
+  source.connect(gainNodeRef.current);
+  gainNodeRef.current.connect(context.destination);
+
+  // Load buffer
+  const response = await fetch(url);
+  const arrayBuffer = await response.arrayBuffer();
+  const audioBuffer = await context.decodeAudioData(arrayBuffer);
+
+  source.buffer = audioBuffer;
+  source.start(0);
+  source.loop = true;
+  setIsAudioPlaying(true);
+  setIsLoading(false);
+}
+
+
+const play = (trackUri) => {
+  setAudioState("PLAYING");
+
+  if (isAudioPlaying) return;
+  loadAudio(trackUri);
+  setIsAudioPlaying(true);
+
+  // Если таймер включен, установите таймер для автоматического переключения трека
+  if (checkboxChecked) {
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      setIsAudioPlaying(false);
+      setAudioIndex((currentIndex) => (currentIndex + 1) % tracks.length);
+    }, timerDuration);
+  }
+};
+
 
   useEffect(() => {
     const allTracks = [];
@@ -279,10 +318,7 @@ export default function Home() {
   function toggleMenu() {
   setMenuVisible((prevState) => !prevState);
 }
-  function handleVolumeChange(e) {
-    const newVolume = e.target.value;
-    setVolume(newVolume);
-  }
+
 
   function handlePlaybackRateChange(e) {
     const newPlaybackRate = e.target.value;
@@ -296,6 +332,16 @@ export default function Home() {
   function handleTimerChange(value) {
     setTimerDuration(value);
   }
+
+  const [theme, setTheme] = useState("light");
+
+  function changeTheme(newTheme) {
+    setTheme(newTheme);
+  }
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
   // useEffect(() => {
   //   console.log("audioState:", audioState);
   //   console.log("isAudioPlaying:", isAudioPlaying);
@@ -363,7 +409,7 @@ export default function Home() {
                     }
                   }}
                 >
-                  {isAudioPlaying ? "Stop" : isLoading ? "Загрузка..." : "Play"}
+                  {isAudioPlaying ? "Stop" : isLoading ? "Wait" : "Play"}
                 </button>
               </div>
             </div>
@@ -377,48 +423,59 @@ export default function Home() {
       {menuVisible && (
   <div className="app__menu">
     <div className="app__menu-item">
-      <label htmlFor="volume">Volume</label>
-      <input
-        type="range"
-        id="volume"
-        min="0"
-        max="1"
-        step="0.01"
-        value={volume}
-        onChange={handleVolumeChange}
-      />
+  <label htmlFor="volume">Volume</label>
+  <input
+    type="range"
+    id="volume"
+    min="0"
+    max="100" // Замените значение '1' на '100'
+    step="0.01"
+    value={volume * 100} // Умножьте volume на 100, чтобы отобразить правильное положение ползунка
+    onChange={handleVolumeChange}
+  />
+</div>
+    <div className="app__menu-item app__menu-item-separator">
+     <label htmlFor="playbackRate">Playback Rate  </label>
+  <input
+    type="range"
+    id="playbackRate"
+    min="0.5"
+    max="2"
+    step="0.01"
+    value={playbackRate}
+    onChange={(e) => setPlaybackRate(e.target.value)}
+  />
     </div>
+<div className="app__menu-item">
+  <label htmlFor="timer">Minutes  </label>
+  <input
+    type="number"
+    id="timer"
+    min="1"
+    step="1"
+    onChange={(e) => setTimerDuration(e.target.value * 60 * 1000)}
+  />
+</div>
+<div className="app__menu-item app__menu-item-separator">
+  <label htmlFor="checkbox">On Timer</label>
+  <input
+    type="checkbox"
+    id="checkbox"
+    checked={checkboxChecked}
+    onChange={handleCheckboxChange}
+  />
+</div>
     <div className="app__menu-item">
-      <label htmlFor="playbackRate">Speed</label>
-      <input
-        type="range"
-        id="playbackRate"
-        min="0.5"
-        max="2"
-        step="0.01"
-        value={playbackRate}
-        onChange={handlePlaybackRateChange}
-      />
-    </div>
-    <div className="app__menu-item">
-      <label htmlFor="timer">Minutes  </label>
-      <input
-        type="number"
-        id="timer"
-        min="1"
-        step="1"
-        onChange={(e) => setTimerDuration(e.target.value * 60 * 1000)}
-      />
-    </div>
-    <div className="app__menu-item">
-      <label htmlFor="checkbox">On Timer</label>
-      <input
-        type="checkbox"
-        id="checkbox"
-        checked={checkboxChecked}
-        onChange={handleCheckboxChange}
-      />
-    </div>
+            <label htmlFor="theme">Theme</label>
+            <select
+              id="theme"
+              value={theme}
+              onChange={(e) => changeTheme(e.target.value)}
+            >
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+</select>
+</div>
   </div>
 )}
       <Player

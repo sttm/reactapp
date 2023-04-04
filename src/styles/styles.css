@@ -15,7 +15,7 @@ body {
 }
 body {
   font-family: HK Grotesk;
-  background-color: var(--color-bg);
+/*   background-color: var(--color-bg); */
   overflow-x: hidden; /* Добавьте это свойство */
 }
 a {
@@ -61,6 +61,67 @@ img {
   --font-family: "HK Grotesk";
   --font-family-header: "HK Grotesk";
 }
+
+:root {
+  /* Цвета для светлой темы */
+  --color-bg-light: #ffffff;
+  --color-text-light: #333333;
+  /* Цвета для темной темы */
+  --color-bg-dark: #333333;
+  --color-text-dark: #ffffff;
+}
+
+/* Стили для светлой темы */
+[data-theme="light"] {
+  background-color: var(--color-bg);
+  color: var(--color-text-light);
+}
+
+/* Стили для темной темы */
+[data-theme="dark"] {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-dark);
+}
+
+[data-theme="light"] .looper-list li {
+  background-color: #ededed;
+}
+
+/* Цвет фона для .player в темной теме */
+[data-theme="dark"] .looper-list li {
+  background-color: #242424;
+}
+[data-theme="light"] .panel {
+  background-color: #f5f5f5;
+}
+
+/* Цвет фона для .player в темной теме */
+[data-theme="dark"] .panel {
+  background-color: var(--color-bg-dark);
+}
+
+[data-theme="dark"] .btn--panel-toggle {
+    background-color: #4e4e4e;
+    border-radius: 0px;
+}
+
+[data-theme="dark"] .controls button,
+.controls a {
+  text-transform: uppercase;
+  background-color: #4a4a4a;
+  border-radius: 0px;
+
+}
+
+
+.app__menu-item-separator {
+  margin-bottom: 1rem;
+}
+
+
+
+
+
 
 .wrapper {
   min-height: var(--wrapper-height);
@@ -137,7 +198,7 @@ img {
 .track h3 {
   align-items: left;
   margin: 0;
-  font-size: 16px;
+  font-size: 85%;
 font-size-adjust: 0.5;
 }
 
@@ -290,7 +351,7 @@ h2 {
   li {
     width: 100%;
     padding: 10px;
-    background-color: #f7f7f7;
+/*     background-color: #f7f7f7; */
     border-radius: 5px;
     max-width: 300px;
     list-style-type: none;
