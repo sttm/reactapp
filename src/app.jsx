@@ -28,14 +28,28 @@ export default function Home() {
   const [volume, setVolume] = useState(1);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [theme, setTheme] = useState("light");
-const intervals = [1, 2, 5, 10, 15, 20, 30, "off"];
-const [currentInterval, setCurrentInterval] = useState("off");
+  const intervals = [1, 2, 5, 10, 15, 20, 30, "off"];
+  const [currentInterval, setCurrentInterval] = useState("off");
 
-const handleButtonClick = () => {
-  const currentIndex = intervals.indexOf(currentInterval);
-  const nextIndex = (currentIndex + 1) % intervals.length;
-  setCurrentInterval(intervals[nextIndex]);
-};
+  const [fontSize, setFontSize] = useState("75%");
+
+  const adjustFontSize = (text) => {
+    const length = text.length;
+
+    if (length < 10) {
+      setFontSize("100%");
+    } else if (length < 20) {
+      setFontSize("75%");
+    } else {
+      setFontSize("50%");
+    }
+  };
+
+  const handleButtonClick = () => {
+    const currentIndex = intervals.indexOf(currentInterval);
+    const nextIndex = (currentIndex + 1) % intervals.length;
+    setCurrentInterval(intervals[nextIndex]);
+  };
   function changeTheme(newTheme) {
     setTheme(newTheme);
   }
@@ -305,23 +319,20 @@ const handleButtonClick = () => {
     setPlaybackRate(newPlaybackRate);
   }
 
+  useEffect(() => {
+    let intervalId;
 
-  
-useEffect(() => {
-  let intervalId;
-
-  if (allTracks.length > 0 && currentInterval !== "off") {
-    intervalId = setInterval(playRandomTrack, currentInterval * 60 * 1000);
-  }
-
-  return () => {
-    if (intervalId) {
-      clearInterval(intervalId);
+    if (allTracks.length > 0 && currentInterval !== "off") {
+      intervalId = setInterval(playRandomTrack, currentInterval * 60 * 1000);
     }
-  };
-}, [allTracks, currentInterval]);
-  
-  
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [allTracks, currentInterval]);
+
   const playRandomTrack = () => {
     if (allTracks.length > 0) {
       const randomTrackIndex = Math.floor(Math.random() * allTracks.length);
@@ -438,12 +449,12 @@ useEffect(() => {
           <div className="app__menu-item app__menu-item-separator">
             <label htmlFor="timer">Timer </label>
             <button onClick={handleButtonClick}>
-    {currentInterval === "off" ? "off" : `${currentInterval} min`}
+              {currentInterval === "off" ? "off" : `${currentInterval} min`}
             </button>
           </div>
 
           <div className="app__menu-item">
-            <label htmlFor="theme">Theme  </label>
+            <label htmlFor="theme">Theme </label>
             <select
               id="theme"
               value={theme}

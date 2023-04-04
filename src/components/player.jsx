@@ -27,25 +27,24 @@ export default function Player({
   const [checkboxChecked, setCheckboxChecked] = useState(false);
   const [trackTimer, setTrackTimer] = useState(null);
   const [timerDuration, setTimerDuration] = useState(0);
-  
-const [fontSize, setFontSize] = useState('75%');
 
-const adjustFontSize = (text) => {
-  const length = text.length;
+  const [fontSize, setFontSize] = useState("75%");
 
-  if (length < 10) {
-    setFontSize('100%');
-  } else if (length < 20) {
-    setFontSize('75%');
-  } else {
-    setFontSize('50%');
-  }
-};
+  const adjustFontSize = (text) => {
+    const length = text.length;
+
+    if (length < 10) {
+      setFontSize("100%");
+    } else if (length < 20) {
+      setFontSize("75%");
+    } else {
+      setFontSize("50%");
+    }
+  };
 
   function handleTimerDurationChange(e) {
     setTimerDuration(e.target.value);
   }
-
 
   function handlePlaybackRateChange(e) {
     const newPlaybackRate = e.target.value;
@@ -79,21 +78,21 @@ const adjustFontSize = (text) => {
   }, [currentTrackIndex, isAudioPlaying, allTracks]);
 
   // Toggle play/pause when button is clicked
-function togglePlay() {
-  if (isAudioPlaying) {
-    stop();
-  } else {
-    if (audioContextRef.current) {
-      if (audioContextRef.current.state === "suspended") {
-        audioContextRef.current.resume();
-      }
+  function togglePlay() {
+    if (isAudioPlaying) {
+      stop();
     } else {
-      audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioContextRef.current) {
+        if (audioContextRef.current.state === "suspended") {
+          audioContextRef.current.resume();
+        }
+      } else {
+        audioContextRef.current = new (window.AudioContext ||
+          window.webkitAudioContext)();
+      }
+      play(allTracks[currentTrackIndex].uri);
     }
-    play(allTracks[currentTrackIndex].uri);
-
   }
-}
 
   function playTrack(trackIndex, timerDuration) {
     // ... play the track here
@@ -116,8 +115,12 @@ function togglePlay() {
               className="player__album-art"
             />
             <div className="player_all_title">
-              <p className="player__title" style={{ fontSize }}>{currentTrack.title_album}</p>
-              <p className="player__artist" style={{ fontSize }}>{currentTrack.filename}</p>
+              <p className="player__title" style={{ fontSize }}>
+                {currentTrack.title_album}
+              </p>
+              <p className="player__artist" style={{ fontSize }}>
+                {currentTrack.filename}
+              </p>
             </div>
           </>
         )}
@@ -130,19 +133,19 @@ function togglePlay() {
             <FontAwesomeIcon icon={isAudioPlaying ? faStop : faPlay} />
           </button>
         )}
-        <button
-          onClick={playRandomTrack}
-        >
+        <button onClick={playRandomTrack}>
           <FontAwesomeIcon icon={faRedo} />
         </button>
-<button onClick={() => {
-  toggleMenu();
-  setMenuVisible((prevState) => !prevState);
-}}>
-  <FontAwesomeIcon icon={faCog} />
-</button>
+        <button
+          onClick={() => {
+            toggleMenu();
+            setMenuVisible((prevState) => !prevState);
+          }}
+        >
+          <FontAwesomeIcon icon={faCog} />
+        </button>
       </div>
-      
+
       <audio id="audio-element" ref={audioRef} />
     </div>
   );

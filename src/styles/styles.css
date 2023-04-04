@@ -201,12 +201,12 @@ img {
 }
 
 .track img {
-    right: 0;
-    width: 50px;
-    height: 50px;
-    margin-right: 10px;
-    object-fit: cover;
-    margin-left: 0;
+  right: 0;
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  object-fit: cover;
+  margin-left: 0;
 }
 
 .track h3 {
@@ -348,33 +348,32 @@ a:not(.btn--remix):visited {
   font-size: 1rem;
 }
 
-  .looper-list {
-    align-items: end;
-    flex-direction: initial;
-  }
+.looper-list {
+  align-items: end;
+  flex-direction: initial;
+}
 @media only screen and (max-width: 600px) {
   /* CSS rules for screens with max-width of 600px */
   .looper-list li {
     width: calc(35% - 2rem);
-}
+  }
 }
 
 @media only screen and (min-width: 601px) {
   .panel {
     padding: 0 25% 0 25%;
   }
-
-  .looper-list li {
-    width: calc(
-      30% - 2rem
-    ); /* Задайте ширину для элементов списка на экранах с минимальной шириной 601px */
+  h2 {
+    font-size: smaller;
   }
-  /* CSS rules for screens with min-width of 601px */
+  .looper-list li {
+    width: calc(30% - 2rem);
+  }
 }
 
 @media screen and (max-width: 767px) {
   ul {
-/*     display: flex;
+    /*     display: flex;
     flex-direction: column;
     align-items: center; */
     width: 100%;
@@ -393,5 +392,4 @@ a:not(.btn--remix):visited {
   .wrapper {
     padding: 0 20px;
   }
-  
 }

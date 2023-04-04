@@ -1,7 +1,4 @@
-
-
 /* player.css */
-
 
 [data-theme="light"] .player {
   background-color: #f5f5f5;
@@ -28,19 +25,19 @@
 }
 
 [data-theme="dark"] .player__controls button {
-    background-color: #606060;
-    border-radius: 0;  
+  background-color: #606060;
+  border-radius: 0;
 }
 
 .player_all_title {
   height: 0px;
-    width: 100%;
+  width: 100%;
 }
 
 .player_all_title p {
   margin: 0;
   padding: 0;
-/*   font-size: 75%;  */
+  /*   font-size: 75%;  */
 }
 .player {
   position: fixed;
@@ -48,7 +45,7 @@
   left: 0;
   right: 0;
   height: 60px;
-/*   background-color: #f5f5f5; */
+  /*   background-color: #f5f5f5; */
   border-top: 1px solid #ccc;
   display: flex;
   align-items: center;
@@ -107,16 +104,16 @@
   font-size-adjust: 0.5;
 }
 .app__menu {
-    right: 20px;
-    position: fixed;
-    bottom: 65px;
-    /* background-color: #ffffff; */
-    border: 1px solid #cccccc;
-    border-radius: 5px;
-    padding: 8px;
-    display: flex;
-    flex-direction: column;
-    z-index: 1;
+  right: 20px;
+  position: fixed;
+  bottom: 65px;
+  /* background-color: #ffffff; */
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
 }
 
 .player__menu-item {
@@ -147,7 +144,6 @@
 /* Добавьте медиа-запрос для мобильных устройств */
 @media screen and (max-width: 767px) {
   .player {
-    
     padding: 0 10px; /* Уменьшите отступы слева и справа */
   }
 
@@ -169,8 +165,7 @@
 }
 
 @media only screen and (min-width: 601px) {
-
-  .player{
+  .player {
     padding: 0 25% 0 25%;
   }
   /* CSS rules for screens with min-width of 601px */
