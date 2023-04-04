@@ -443,7 +443,7 @@ useEffect(() => {
           </div>
 
           <div className="app__menu-item">
-            <label htmlFor="theme">Theme</label>
+            <label htmlFor="theme">Theme  </label>
             <select
               id="theme"
               value={theme}
