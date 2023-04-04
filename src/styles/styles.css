@@ -5,30 +5,29 @@
     format("opentype");
 }
 
-
 html,
 body {
-/*   margin: 0; */
-/*   padding: 0; */
+  /*   margin: 0; */
+  /*   padding: 0; */
   overflow-x: hidden;
   max-width: 100%;
 }
 body {
   font-family: HK Grotesk;
-/*   background-color: var(--color-bg); */
+  /*   background-color: var(--color-bg); */
   overflow-x: hidden; /* Добавьте это свойство */
 }
 a {
-    font-size: 11px;
+  font-size: 11px;
 }
 ul {
   width: inherit;
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 li {
@@ -41,7 +40,7 @@ li {
   margin: 50px 0 50px 0;
 }
 h1 {
-  color: #2800FF;
+  color: #2800ff;
   font-family: HK Grotesk;
   font-style: normal;
   font-weight: bold;
@@ -52,10 +51,9 @@ img {
   max-width: 100%;
 }
 :root {
-  
-  --color-bg: #FFFFA0;
+  --color-bg: #ffffa0;
   --color-text-main: #000000;
-  --color-primary: #AFECE0;
+  --color-primary: #afece0;
   --wrapper-height: 85vh;
   --image-max-width: 10px;
   --font-family: "HK Grotesk";
@@ -84,7 +82,7 @@ img {
 }
 
 [data-theme="light"] .looper-list li {
-  background-color: #ededed;
+  background-color: #fff;
 }
 
 /* Цвет фона для .player в темной теме */
@@ -101,8 +99,8 @@ img {
 }
 
 [data-theme="dark"] .btn--panel-toggle {
-    background-color: #4e4e4e;
-    border-radius: 0px;
+  background-color: #4e4e4e;
+  border-radius: 0px;
 }
 
 [data-theme="dark"] .controls button,
@@ -110,18 +108,25 @@ img {
   text-transform: uppercase;
   background-color: #4a4a4a;
   border-radius: 0px;
-
 }
-
 
 .app__menu-item-separator {
   margin-bottom: 1rem;
 }
 
+.looper-list {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
 
-
-
-
+.looper-list li {
+  flex: 1 1 auto;
+  margin: 1rem;
+  box-sizing: border-box;
+}
 
 .wrapper {
   min-height: var(--wrapper-height);
@@ -132,7 +137,6 @@ img {
   overflow-x: hidden; /* Добавьте это свойство */
   max-width: 100%;
 }
-
 
 .playButton {
   display: inline-block;
@@ -153,8 +157,6 @@ img {
   border-color: #007bff;
 }
 
-
-
 .btn--panel-toggle {
   display: block;
   margin: 20px auto;
@@ -168,7 +170,7 @@ img {
 .content h2 {
   font-family: HK Grotesk;
   color: black;
-  text-align: center
+  text-align: center;
 }
 .panel {
   position: fixed;
@@ -183,7 +185,7 @@ img {
 
 .track {
   display: flex;
-/*   align-items: center; */
+  /*   align-items: center; */
   padding: 10px;
   border-bottom: 1px solid #ddd;
 }
@@ -199,7 +201,7 @@ img {
   align-items: left;
   margin: 0;
   font-size: 85%;
-font-size-adjust: 0.5;
+  font-size-adjust: 0.5;
 }
 
 .controls {
@@ -233,8 +235,6 @@ font-size-adjust: 0.5;
   display: none !important;
 }
 
-
-
 /* Our remix on glitch button */
 .btn--remix {
   font-family: HK Grotesk;
@@ -245,7 +245,7 @@ font-size-adjust: 0.5;
   height: 2.75rem;
   align-items: center;
   cursor: pointer;
-  background: #FFFFFF;
+  background: #ffffff;
   border: 1px solid #000000;
   box-sizing: border-box;
   border-radius: 4px;
@@ -258,7 +258,7 @@ font-size-adjust: 0.5;
   margin-right: 0.5rem;
 }
 .btn--remix:hover {
-  background-color: #D0FFF1;
+  background-color: #d0fff1;
 }
 
 .footer {
@@ -293,7 +293,6 @@ a:not(.btn--remix):visited {
 .divider {
   padding: 0 1rem;
 }
-
 
 .page h1 {
   font-size: 48px;
@@ -337,7 +336,7 @@ a:not(.btn--remix):visited {
   font-size: 1rem;
 }
 h2 {
-/*   color: #2800FF; */
+  /*   color: #2800FF; */
   text-align: center;
 }
 
@@ -349,7 +348,14 @@ h2 {
   .panel {
     padding: 0 25% 0 25%;
   }
-
+  .looper-list {
+    flex-direction: initial;
+  }
+  .looper-list li {
+    width: calc(
+      30% - 2rem
+    ); /* Задайте ширину для элементов списка на экранах с минимальной шириной 601px */
+  }
   /* CSS rules for screens with min-width of 601px */
 }
 
