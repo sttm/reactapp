@@ -412,7 +412,7 @@ useEffect(() => {
       {menuVisible && (
         <div className="app__menu">
           <div className="app__menu-item">
-            <label htmlFor="volume">Volume</label>
+            <label htmlFor="volume">Vol </label>
             <input
               type="range"
               id="volume"
@@ -424,7 +424,7 @@ useEffect(() => {
             />
           </div>
           <div className="app__menu-item app__menu-item-separator">
-            <label htmlFor="playbackRate">Playback Rate </label>
+            <label htmlFor="playbackRate">Pth </label>
             <input
               type="range"
               id="playbackRate"
