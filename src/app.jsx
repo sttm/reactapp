@@ -348,7 +348,7 @@ export default function Home() {
   // }, [audioState, isAudioPlaying]);
   return (
     <>
-      <audio
+      <audio autoplay 
         ref={dummyAudioElementRef}
         src="https://github.com/anars/blank-audio/blob/master/15-seconds-of-silence.mp3?raw=true"
       />
