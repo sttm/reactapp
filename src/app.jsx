@@ -7,6 +7,7 @@ import "./styles/player.css";
 import PageRouter from "./components/router.jsx";
 import Seo from "./components/seo.jsx";
 import Player from "./components/player.jsx";
+import VanillaLazyload from "vanilla-lazyload";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
@@ -342,13 +343,21 @@ export default function Home() {
       console.warn("allTracks is empty or not set.");
     }
   };
+
+  useEffect(() => {
+    const lazyLoadInstance = new VanillaLazyload({
+      elements_selector: ".looper-list img",
+      threshold: 200,
+    });
+  }, []);
+
   // useEffect(() => {
   //   console.log("audioState:", audioState);
   //   console.log("isAudioPlaying:", isAudioPlaying);
   // }, [audioState, isAudioPlaying]);
   return (
     <>
-      <audio 
+      <audio
         ref={dummyAudioElementRef}
         src="https://github.com/anars/blank-audio/blob/master/15-seconds-of-silence.mp3?raw=true"
       />
@@ -357,13 +366,14 @@ export default function Home() {
           <ul className="looper-list">
             {images.map((image, index) => (
               <li
-                key={`${image.id}-${index}`} // Use a unique key by combining the image id and index
+                key={`${image.id}-${index}`}
                 ref={index === images.length - 1 ? setLastImageElement : null}
               >
                 <h2>{image.title}</h2>
                 <img
                   src={image.field_image_field.und[0].uri}
                   alt={image.title}
+                  className="lazyload"
                 />
                 <button
                   className="btn--panel-toggle"
