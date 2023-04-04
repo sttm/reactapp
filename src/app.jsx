@@ -72,7 +72,7 @@ export default function Home() {
         data = null;
       }
     }
-    setImages(data);
+    setImages((prevImages) => [...prevImages, ...data]);
   }
 
   useEffect(() => {
@@ -369,7 +369,7 @@ export default function Home() {
                     }
                   }}
                 >
-                  {isAudioPlaying ? "Stop" : isLoading ? "Загрузка..." : "Play"}
+                  {isAudioPlaying ? "Stop" : isLoading ? "Wait" : "Play"}
                 </button>
               </div>
             </div>
