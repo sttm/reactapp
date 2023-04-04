@@ -19,7 +19,7 @@ export default function Home() {
   const dummyAudioElementRef = useRef(null);
   const audioContextRef = useRef(null);
   const audioSourceRef = useRef(null);
-const gainNodeRef = useRef(null);
+  const gainNodeRef = useRef(null);
 
   const [tracks, setTracks] = useState([]);
   const [images, setImages] = useState([]);
@@ -31,16 +31,16 @@ const gainNodeRef = useRef(null);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [timerDuration, setTimerDuration] = useState(20 * 1000); // default 20 seconds
   const [audioIndex, setAudioIndex] = useState(0);
-const timerRef = useRef(null);
-  
-function handleVolumeChange(e) {
-  const maxGain = 1; // Максимальное значение усиления. Установите значение ниже 1, чтобы снизить максимальную громкость.
-  const newVolume = e.target.value / 100 * maxGain;
-  setVolume(newVolume);
-  if (gainNodeRef.current) {
-    gainNodeRef.current.gain.value = newVolume;
+  const timerRef = useRef(null);
+
+  function handleVolumeChange(e) {
+    const maxGain = 1; // Максимальное значение усиления. Установите значение ниже 1, чтобы снизить максимальную громкость.
+    const newVolume = (e.target.value / 100) * maxGain;
+    setVolume(newVolume);
+    if (gainNodeRef.current) {
+      gainNodeRef.current.gain.value = newVolume;
+    }
   }
-}
 
   let trackTimer;
   function handleScroll() {
@@ -62,9 +62,23 @@ function handleVolumeChange(e) {
   }, []);
 
   async function fetchMoreImages() {
-    const response = await fetch("src/output.json");
-    const data = await response.json();
-    setImages((prevImages) => [...prevImages, ...data]);
+    let data;
+    try {
+      const response1 = await fetch("src/output.json");
+      data = await response1.json();
+    } catch (error) {
+      console.error(error);
+      try {
+        const response2 = await fetch(
+          "https://raw.githubusercontent.com/sttm/reactapp/glitch/src/output.json"
+        );
+        data = await response2.json();
+      } catch (error) {
+        console.error(error);
+        data = null;
+      }
+    }
+    setImages(data);
   }
 
   useEffect(() => {
@@ -107,14 +121,14 @@ function handleVolumeChange(e) {
       setShowPanel(false);
     }
   }
-useEffect(() => {
-  if (audioSourceRef.current && audioContextRef.current) {
-    const gainNode = audioContextRef.current.createGain();
-    gainNode.gain.value = volume;
-    audioSourceRef.current.connect(gainNode);
-    gainNode.connect(audioContextRef.current.destination);
-  }
-}, [volume]);
+  useEffect(() => {
+    if (audioSourceRef.current && audioContextRef.current) {
+      const gainNode = audioContextRef.current.createGain();
+      gainNode.gain.value = volume;
+      audioSourceRef.current.connect(gainNode);
+      gainNode.connect(audioContextRef.current.destination);
+    }
+  }, [volume]);
 
   // Create an audio context if one doesn't already exist
   function createAudioContext() {
@@ -125,18 +139,18 @@ useEffect(() => {
   }
 
   function playTrack(trackIndex, timerDuration) {
-  const track = allTracks[trackIndex];
-  setAudioState("PLAYING");
-  loadAudio(track.uri);
-  createAudioContext();
-  setCurrentTrackIndex(trackIndex);
-  
-  // Schedule next track after timerDuration
-  setTimeout(() => {
-    const nextTrackIndex = (trackIndex + 1) % allTracks.length;
-    playTrack(nextTrackIndex, timerDuration);
-  }, timerDuration);
-}
+    const track = allTracks[trackIndex];
+    setAudioState("PLAYING");
+    loadAudio(track.uri);
+    createAudioContext();
+    setCurrentTrackIndex(trackIndex);
+
+    // Schedule next track after timerDuration
+    setTimeout(() => {
+      const nextTrackIndex = (trackIndex + 1) % allTracks.length;
+      playTrack(nextTrackIndex, timerDuration);
+    }, timerDuration);
+  }
 
   function setCurrentTrackIndexFromPlayer(newIndex) {
     setCurrentTrackIndex(newIndex);
@@ -152,61 +166,59 @@ useEffect(() => {
   }
 
   async function loadAudio(url) {
-  setIsLoading(true);
-  if (!audioContextRef.current) {
-    return;
+    setIsLoading(true);
+    if (!audioContextRef.current) {
+      return;
+    }
+    const context = audioContextRef.current;
+    if (context.state === "suspended") {
+      await context.resume();
+    }
+
+    if (audioSourceRef.current) {
+      audioSourceRef.current.stop();
+      audioSourceRef.current.disconnect();
+    }
+
+    const source = context.createBufferSource();
+    audioSourceRef.current = source;
+
+    // Создаем и подключаем gainNode
+    if (!gainNodeRef.current) {
+      gainNodeRef.current = context.createGain();
+    }
+    gainNodeRef.current.gain.value = volume;
+    source.connect(gainNodeRef.current);
+    gainNodeRef.current.connect(context.destination);
+
+    // Load buffer
+    const response = await fetch(url);
+    const arrayBuffer = await response.arrayBuffer();
+    const audioBuffer = await context.decodeAudioData(arrayBuffer);
+
+    source.buffer = audioBuffer;
+    source.start(0);
+    source.loop = true;
+    setIsAudioPlaying(true);
+    setIsLoading(false);
   }
-  const context = audioContextRef.current;
-  if (context.state === "suspended") {
-    await context.resume();
-  }
 
-  if (audioSourceRef.current) {
-    audioSourceRef.current.stop();
-    audioSourceRef.current.disconnect();
-  }
+  const play = (trackUri) => {
+    setAudioState("PLAYING");
 
-  const source = context.createBufferSource();
-  audioSourceRef.current = source;
+    if (isAudioPlaying) return;
+    loadAudio(trackUri);
+    setIsAudioPlaying(true);
 
-  // Создаем и подключаем gainNode
-  if (!gainNodeRef.current) {
-    gainNodeRef.current = context.createGain();
-  }
-  gainNodeRef.current.gain.value = volume;
-  source.connect(gainNodeRef.current);
-  gainNodeRef.current.connect(context.destination);
-
-  // Load buffer
-  const response = await fetch(url);
-  const arrayBuffer = await response.arrayBuffer();
-  const audioBuffer = await context.decodeAudioData(arrayBuffer);
-
-  source.buffer = audioBuffer;
-  source.start(0);
-  source.loop = true;
-  setIsAudioPlaying(true);
-  setIsLoading(false);
-}
-
-
-const play = (trackUri) => {
-  setAudioState("PLAYING");
-
-  if (isAudioPlaying) return;
-  loadAudio(trackUri);
-  setIsAudioPlaying(true);
-
-  // Если таймер включен, установите таймер для автоматического переключения трека
-  if (checkboxChecked) {
-    clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => {
-      setIsAudioPlaying(false);
-      setAudioIndex((currentIndex) => (currentIndex + 1) % tracks.length);
-    }, timerDuration);
-  }
-};
-
+    // Если таймер включен, установите таймер для автоматического переключения трека
+    if (checkboxChecked) {
+      clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => {
+        setIsAudioPlaying(false);
+        setAudioIndex((currentIndex) => (currentIndex + 1) % tracks.length);
+      }, timerDuration);
+    }
+  };
 
   useEffect(() => {
     const allTracks = [];
@@ -316,9 +328,8 @@ const play = (trackUri) => {
     }
   }
   function toggleMenu() {
-  setMenuVisible((prevState) => !prevState);
-}
-
+    setMenuVisible((prevState) => !prevState);
+  }
 
   function handlePlaybackRateChange(e) {
     const newPlaybackRate = e.target.value;
@@ -421,51 +432,51 @@ const play = (trackUri) => {
       </Router>
       <Seo />
       {menuVisible && (
-  <div className="app__menu">
-    <div className="app__menu-item">
-  <label htmlFor="volume">Volume</label>
-  <input
-    type="range"
-    id="volume"
-    min="0"
-    max="100" // Замените значение '1' на '100'
-    step="0.01"
-    value={volume * 100} // Умножьте volume на 100, чтобы отобразить правильное положение ползунка
-    onChange={handleVolumeChange}
-  />
-</div>
-    <div className="app__menu-item app__menu-item-separator">
-     <label htmlFor="playbackRate">Playback Rate  </label>
-  <input
-    type="range"
-    id="playbackRate"
-    min="0.5"
-    max="2"
-    step="0.01"
-    value={playbackRate}
-    onChange={(e) => setPlaybackRate(e.target.value)}
-  />
-    </div>
-<div className="app__menu-item">
-  <label htmlFor="timer">Minutes  </label>
-  <input
-    type="number"
-    id="timer"
-    min="1"
-    step="1"
-    onChange={(e) => setTimerDuration(e.target.value * 60 * 1000)}
-  />
-</div>
-<div className="app__menu-item app__menu-item-separator">
-  <label htmlFor="checkbox">On Timer</label>
-  <input
-    type="checkbox"
-    id="checkbox"
-    checked={checkboxChecked}
-    onChange={handleCheckboxChange}
-  />
-</div>
-    <div className="app__menu-item">
+        <div className="app__menu">
+          <div className="app__menu-item">
+            <label htmlFor="volume">Volume</label>
+            <input
+              type="range"
+              id="volume"
+              min="0"
+              max="100" // Замените значение '1' на '100'
+              step="0.01"
+              value={volume * 100} // Умножьте volume на 100, чтобы отобразить правильное положение ползунка
+              onChange={handleVolumeChange}
+            />
+          </div>
+          <div className="app__menu-item app__menu-item-separator">
+            <label htmlFor="playbackRate">Playback Rate </label>
+            <input
+              type="range"
+              id="playbackRate"
+              min="0.5"
+              max="2"
+              step="0.01"
+              value={playbackRate}
+              onChange={(e) => setPlaybackRate(e.target.value)}
+            />
+          </div>
+          <div className="app__menu-item">
+            <label htmlFor="timer">Minutes </label>
+            <input
+              type="number"
+              id="timer"
+              min="1"
+              step="1"
+              onChange={(e) => setTimerDuration(e.target.value * 60 * 1000)}
+            />
+          </div>
+          <div className="app__menu-item app__menu-item-separator">
+            <label htmlFor="checkbox">On Timer</label>
+            <input
+              type="checkbox"
+              id="checkbox"
+              checked={checkboxChecked}
+              onChange={handleCheckboxChange}
+            />
+          </div>
+          <div className="app__menu-item">
             <label htmlFor="theme">Theme</label>
             <select
               id="theme"
@@ -474,10 +485,10 @@ const play = (trackUri) => {
             >
               <option value="light">Light</option>
               <option value="dark">Dark</option>
-</select>
-</div>
-  </div>
-)}
+            </select>
+          </div>
+        </div>
+      )}
       <Player
         allTracks={allTracks}
         isAudioPlaying={isAudioPlaying}
@@ -494,9 +505,8 @@ const play = (trackUri) => {
         )}
         audioContextRef={audioContextRef}
         isLoading={isLoading}
-        
-  toggleMenu={toggleMenu}
-  menuVisible={menuVisible}
+        toggleMenu={toggleMenu}
+        menuVisible={menuVisible}
       />
     </>
   );
