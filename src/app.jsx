@@ -357,10 +357,10 @@ const itemsPerPage = 10;
     }
   };
   
-  useEffect(() => {
-    console.log("audioState:", audioState);
-    // console.log("isAudioPlaying:", isAudioPlaying);
-  }, [audioState, isAudioPlaying]);
+  // useEffect(() => {
+  //   console.log("audioState:", audioState);
+  //   // console.log("isAudioPlaying:", isAudioPlaying);
+  // }, [audioState, isAudioPlaying]);
   return (
     <>
       <audio 
@@ -454,8 +454,8 @@ const itemsPerPage = 10;
             <input
               type="range"
               id="playbackRate"
-              min="0.1"
-              max="1.9"
+              min="0.2"
+              max="1.8"
               step="0.05"
               value={playbackRate}
               onChange={handlePlaybackRateChange}
