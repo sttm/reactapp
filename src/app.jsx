@@ -471,8 +471,8 @@ const itemsPerPage = 10;
               value={theme}
               onChange={(e) => changeTheme(e.target.value)}
             >
-              <option value="light">Light</option>
               <option value="dark">Dark</option>
+              <option value="light">Light</option>
             </select>
           </div>
         </div>
