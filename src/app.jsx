@@ -132,9 +132,9 @@ const itemsPerPage = 10;
         console.error(error);
       }
     } else {
-      if (isAudioPlaying) {
-        stop();
-      }
+      // if (isAudioPlaying) {
+      //   // stop();
+      // }
       setShowPanel(false);
     }
   }
@@ -153,7 +153,7 @@ const itemsPerPage = 10;
     loadAudio(track.uri);
     createAudioContext();
     setCurrentTrackIndex(trackIndex);
-    
+    setPlaybackRate(1);
   }
 
   function setCurrentTrackIndexFromPlayer(newIndex) {
@@ -198,7 +198,6 @@ const itemsPerPage = 10;
     source.loop = true;
     setIsAudioPlaying(true);
     setIsLoading(false); // Добавьте это
-    
   }
 
   const play = (trackUri) => {
