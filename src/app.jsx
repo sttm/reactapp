@@ -320,8 +320,10 @@ const itemsPerPage = 10;
   function handlePlaybackRateChange(e) {
     const newPlaybackRate = e.target.value;
     setPlaybackRate(newPlaybackRate);
+    if (audioSourceRef.current) {
+      audioSourceRef.current.playbackRate.value = newPlaybackRate;
+    }
   }
-
   let intervalId; // Move this outside of useEffect
 
   useEffect(() => {
@@ -434,7 +436,7 @@ const itemsPerPage = 10;
       <Seo />
       {menuVisible && (
         <div className="app__menu">
-          <div className="app__menu-item">
+          {/* <div className="app__menu-item">
             <label htmlFor="volume">Vol </label>
             <input
               type="range"
@@ -445,17 +447,17 @@ const itemsPerPage = 10;
               value={volume} 
               onChange={handleVolumeChange}
             />
-          </div>
+          </div> */}
           <div className="app__menu-item app__menu-item-separator">
             <label htmlFor="playbackRate">Pth </label>
             <input
               type="range"
               id="playbackRate"
-              min="-100"
-              max="100"
-              step="1"
+              min="0.5"
+              max="2.0"
+              step="0.1"
               value={playbackRate}
-              onChange={(e) => setPlaybackRate(e.target.value)}
+              onChange={handlePlaybackRateChange}
             />
           </div>
           <div className="app__menu-item app__menu-item-separator">
