@@ -326,9 +326,10 @@ const itemsPerPage = 10;
     let intervalId;
 
     if (allTracks.length > 0 && currentInterval !== "off") {
-      if(isAudioPlaying === true) {
-        
-        intervalId = setInterval(playRandomTrack, (currentInterval * 60 * 1000)-50);
+      console.log("opa");
+      intervalId = setInterval(playRandomTrack, currentInterval * 60 * 1000);
+      if (audioState === "PLAYING"){
+        console.log("audioState:", audioState);
       }
     }
 
@@ -350,10 +351,10 @@ const itemsPerPage = 10;
     }
   };
   
-  useEffect(() => {
-    // console.log("audioState:", audioState);
-    console.log("isAudioPlaying:", isAudioPlaying);
-  }, [audioState, isAudioPlaying]);
+  // useEffect(() => {
+  //   console.log("audioState:", audioState);
+  //   console.log("isAudioPlaying:", isAudioPlaying);
+  // }, [audioState, isAudioPlaying]);
   return (
     <>
       <audio 
