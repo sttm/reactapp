@@ -347,10 +347,10 @@ const itemsPerPage = 10;
     }
   };
   
-  // useEffect(() => {
-  //   console.log("audioState:", audioState);
-  //   console.log("isAudioPlaying:", isAudioPlaying);
-  // }, [audioState, isAudioPlaying]);
+  useEffect(() => {
+    console.log("audioState:", audioState);
+    console.log("isAudioPlaying:", isAudioPlaying);
+  }, [audioState, isAudioPlaying]);
   return (
     <>
       <audio 
