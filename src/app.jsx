@@ -456,7 +456,7 @@ const itemsPerPage = 10;
               id="playbackRate"
               min="0.2"
               max="1.8"
-              step="0.05"
+              step="0.01"
               value={playbackRate}
               onChange={handlePlaybackRateChange}
             />
