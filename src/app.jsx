@@ -121,9 +121,6 @@ const itemsPerPage = 10;
     };
 }, [lastImageElement]);
 
-
-
-
   function togglePanel(downloadUrl, imgUrl, allTracks) {
     if (!showPanel) {
       try {
@@ -350,9 +347,6 @@ const itemsPerPage = 10;
     }
   };
   
-  
-  
-  
   // useEffect(() => {
   //   console.log("audioState:", audioState);
   //   console.log("isAudioPlaying:", isAudioPlaying);
@@ -438,10 +432,10 @@ const itemsPerPage = 10;
             <input
               type="range"
               id="volume"
-              min="0"
-              max="100" // Замените значение '1' на '100'
-              step="0.01"
-              value={volume * 100} // Умножьте volume на 100, чтобы отобразить правильное положение ползунка
+              min="-60"
+              max="0" // Замените значение '1' на '100'
+              step="1"
+              value={volume} 
               onChange={handleVolumeChange}
             />
           </div>
