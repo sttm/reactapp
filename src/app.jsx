@@ -322,10 +322,9 @@ const itemsPerPage = 10;
     setPlaybackRate(newPlaybackRate);
   }
 
-  useEffect(() => {
-    
-    let intervalId;
+  let intervalId; // Move this outside of useEffect
 
+  useEffect(() => {
     if (allTracks.length > 0 && currentInterval !== "off" && isAudioPlaying) {
       intervalId = setInterval(playRandomTrack, currentInterval * 60 * 1000);
     }
@@ -336,6 +335,12 @@ const itemsPerPage = 10;
       }
     };
   }, [allTracks, currentInterval, isAudioPlaying]);
+
+  useEffect(() => {
+    if (!isAudioPlaying && intervalId) {
+      clearInterval(intervalId);
+    }
+  }, [isAudioPlaying]);
 
 
   const playRandomTrack = () => {
