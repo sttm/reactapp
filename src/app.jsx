@@ -325,7 +325,7 @@ const itemsPerPage = 10;
   useEffect(() => {
     let intervalId;
 
-    if (allTracks.length > 0 && currentInterval !== "off") {
+    if (allTracks.length > 0 && currentInterval !== "off" && isAudioPlaying === true) {
       intervalId = setInterval(playRandomTrack, currentInterval * 60 * 1000);
     }
 
