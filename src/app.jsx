@@ -444,8 +444,8 @@ const itemsPerPage = 10;
             <input
               type="range"
               id="playbackRate"
-              min="-60"
-              max="0"
+              min="-100"
+              max="100"
               step="1"
               value={playbackRate}
               onChange={(e) => setPlaybackRate(e.target.value)}
