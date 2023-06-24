@@ -153,7 +153,7 @@ const itemsPerPage = 10;
     loadAudio(track.uri);
     createAudioContext();
     setCurrentTrackIndex(trackIndex);
-    setPlaybackRate(1);
+    
   }
 
   function setCurrentTrackIndexFromPlayer(newIndex) {
@@ -164,6 +164,7 @@ const itemsPerPage = 10;
   function stop() {
     setAudioState("STOPPED");
     setIsAudioPlaying(false);
+    setPlaybackRate(1);
     if (audioSourceRef.current) {
       audioSourceRef.current.stop();
     }
