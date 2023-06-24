@@ -325,8 +325,11 @@ const itemsPerPage = 10;
   useEffect(() => {
     let intervalId;
 
-    if (allTracks.length > 0 && currentInterval !== "off" && isAudioPlaying === true) {
-      intervalId = setInterval(playRandomTrack, currentInterval * 60 * 1000);
+    if (allTracks.length > 0 && currentInterval !== "off") {
+      if(isAudioPlaying === true) {
+        
+        intervalId = setInterval(playRandomTrack, (currentInterval * 60 * 1000)-50);
+      }
     }
 
     return () => {
@@ -348,7 +351,7 @@ const itemsPerPage = 10;
   };
   
   useEffect(() => {
-    console.log("audioState:", audioState);
+    // console.log("audioState:", audioState);
     console.log("isAudioPlaying:", isAudioPlaying);
   }, [audioState, isAudioPlaying]);
   return (
