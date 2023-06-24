@@ -27,7 +27,7 @@ export default function Home() {
   const [menuVisible, setMenuVisible] = useState(false);
   const [volume, setVolume] = useState(1);
   const [playbackRate, setPlaybackRate] = useState(1);
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("dark");
   const intervals = [1, 2, 5, 10, 15, 20, 30, "off"];
   const [currentInterval, setCurrentInterval] = useState("off");
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -450,9 +450,9 @@ const itemsPerPage = 10;
             <input
               type="range"
               id="playbackRate"
-              min="0.5"
-              max="2"
-              step="0.01"
+              min="-60"
+              max="0"
+              step="1"
               value={playbackRate}
               onChange={(e) => setPlaybackRate(e.target.value)}
             />
