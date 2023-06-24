@@ -153,7 +153,7 @@ const itemsPerPage = 10;
     loadAudio(track.uri);
     createAudioContext();
     setCurrentTrackIndex(trackIndex);
-    setPlaybackRate(1);
+    
   }
 
   function setCurrentTrackIndexFromPlayer(newIndex) {
@@ -198,6 +198,7 @@ const itemsPerPage = 10;
     source.loop = true;
     setIsAudioPlaying(true);
     setIsLoading(false); // Добавьте это
+    setPlaybackRate(1);
   }
 
   const play = (trackUri) => {
@@ -358,8 +359,8 @@ const itemsPerPage = 10;
   };
   
   useEffect(() => {
-    console.log("audioState:", audioState);
-    // console.log("isAudioPlaying:", isAudioPlaying);
+    // console.log("audioState:", audioState);
+    console.log("isAudioPlaying:", isAudioPlaying);
   }, [audioState, isAudioPlaying]);
   return (
     <>
