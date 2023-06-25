@@ -14,9 +14,8 @@ export default function Player({
   play,
   playTrack,
   currentTrackIndex,
-  setCurrentTrackIndex,
-  // currentTrack,
-  // currentImage,
+  currentTrack,
+  currentImage,
   audioContextRef,
   isLoading,
   toggleMenu,
@@ -63,24 +62,24 @@ export default function Player({
   //   setCheckboxChecked(e.target.checked);
   // }
   // Play next track when current one finishes
-  useEffect(() => {
-    function handleEnded() {
-      clearTimeout(trackTimer);
-      if (currentTrackIndex < allTracks.length - 1) {
-        setCurrentTrackIndex(currentTrackIndex + 1);
-      } else {
-        setCurrentTrackIndex(0);
-      }
-    }
+  // useEffect(() => {
+  //   function handleEnded() {
+  //     clearTimeout(trackTimer);
+  //     if (currentTrackIndex < allTracks.length - 1) {
+  //       setCurrentTrackIndex(currentTrackIndex + 1);
+  //     } else {
+  //       setCurrentTrackIndex(0);
+  //     }
+  //   }
 
-    if (isAudioPlaying) {
-      const audio = audioRef.current;
-      audio.addEventListener("ended", handleEnded);
-      return () => {
-        audio.removeEventListener("ended", handleEnded);
-      };
-    }
-  }, [currentTrackIndex, isAudioPlaying, allTracks]);
+  //   if (isAudioPlaying) {
+  //     const audio = audioRef.current;
+  //     audio.addEventListener("ended", handleEnded);
+  //     return () => {
+  //       audio.removeEventListener("ended", handleEnded);
+  //     };
+  //   }
+  // }, [currentTrackIndex, isAudioPlaying, allTracks]);
 
   // Toggle play/pause when button is clicked
   function togglePlay() {

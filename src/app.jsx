@@ -536,6 +536,7 @@ export default function Home() {
             (track) => track.uri === allTracks[currentTrackIndex]?.uri
           )
         )}
+        
         audioContextRef={audioContextRef}
         isLoading={isLoading}
         toggleMenu={toggleMenu}
