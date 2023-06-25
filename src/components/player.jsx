@@ -109,11 +109,8 @@ export default function Player({
   }
 
   return (
-    
+    <p>page has been viewed {views} times.</p>
     <div className="player">
-      <div>
-      <p>page has been viewed {views} times.</p>
-    </div>
       <div className="player__info">
         {currentTrack && currentImage && (
           <>
@@ -153,8 +150,10 @@ export default function Player({
           <FontAwesomeIcon icon={faCog} />
         </button>
       </div>
+      
 
       <audio id="audio-element" ref={audioRef} />
     </div>
+    
   );
 }
