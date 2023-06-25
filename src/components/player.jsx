@@ -25,7 +25,7 @@ export default function Player({
   // const [menuVisible, setMenuVisible] = useState(false);
   // const [playbackRate, setPlaybackRate] = useState(1);
   // const [checkboxChecked, setCheckboxChecked] = useState(false);
-  const [trackTimer, setTrackTimer] = useState(null);
+  // const [trackTimer, setTrackTimer] = useState(null);
   // const [timerDuration, setTimerDuration] = useState(0);
   const [views, setViews] = useState(0);
   const [fontSize, setFontSize] = useState("75%");

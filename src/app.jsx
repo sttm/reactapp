@@ -25,13 +25,13 @@ export default function Home() {
   // const trackHistory = [];
   const [lastImageElement, setLastImageElement] = useState(null);
   const [menuVisible, setMenuVisible] = useState(false);
-  const [volume, setVolume] = useState(1);
+  // const [volume, setVolume] = useState(1);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [isPlaybackRateIncreasing, setIsPlaybackRateIncreasing] = useState(false);
   const [theme, setTheme] = useState("dark");
   const intervals = [1, 2, 3, 4, 5, 10, 15, 20, 30, "off"];
   const [currentInterval, setCurrentInterval] = useState("off");
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // const [currentIndex, setCurrentIndex] = useState(0);
 
   const [fontSize, setFontSize] = useState("75%");
 
@@ -154,8 +154,8 @@ export default function Home() {
     }
   }
 
-  function playTrack(trackIndex, playlist) {
-    const track = playlist[trackIndex];
+  function playTrack(trackIndex) {
+    const track = allTracks[trackIndex];
     setAudioState("PLAYING");
     loadAudio(track.uri);
     createAudioContext();
@@ -284,8 +284,8 @@ export default function Home() {
       allTracks.length > 0 &&
       images.length > 0
     ) {
-      const currentTrack = allTracks[currentTrackIndex];
-      const currentImage = images.find((image) =>
+      currentTrack = allTracks[currentTrackIndex];
+      currentImage = images.find((image) =>
         image.field_mobile_looper.und.some(
           (track) => track.uri === currentTrack.uri
         )
@@ -323,10 +323,10 @@ export default function Home() {
   function toggleMenu() {
     setMenuVisible((prevState) => !prevState);
   }
-  function handleVolumeChange(e) {
-    const newVolume = e.target.value;
-    setVolume(newVolume);
-  }
+  // function handleVolumeChange(e) {
+  //   const newVolume = e.target.value;
+  //   setVolume(newVolume);
+  // }
 
   function handlePlaybackRateChange(e) {
     const newPlaybackRate = e.target.value;
@@ -432,37 +432,38 @@ export default function Home() {
         )}
       </div>
       {showPanel && (
-  <div className="panel">
-    {tracks.map((track, index) => (
-      <div className="track" key={index}>
-        <img src={images_v} alt={`Cover of ${track.title}`} />
-        <h3>{track.filename}</h3>
-        <div className="controls">
-          <button
-            onClick={() => {
-              if (audioContextRef.current) {
-                if (audioContextRef.current.state === "suspended") {
-                  audioContextRef.current.resume();
-                }
-              } else {
-                audioContextRef.current = new (window.AudioContext ||
-                  window.webkitAudioContext)();
-              }
+        <div className="panel">
+          {tracks.map((track, index) => (
+            <div className="track" key={index}>
+              <img src={images_v} alt={`Cover of ${track.title}`} />
+              <h3>{track.filename}</h3>
+              <div className="controls">
+                <button
+                  onClick={() => {
+                    if (audioContextRef.current) {
+                      if (audioContextRef.current.state === "suspended") {
+                        audioContextRef.current.resume();
+                      }
+                    } else {
+                      audioContextRef.current = new (window.AudioContext ||
+                        window.webkitAudioContext)();
+                    }
 
-              if (isAudioPlaying) {
-                stop();
-              } else {
-                playTrack(index, tracks); // передаем текущий плейлист в функцию playTrack
-              }
-            }}
-          >
-            {isAudioPlaying ? "Stop" : isLoading ? "Wait" : "Play"}
-          </button>
+                    if (isAudioPlaying) {
+                      stop();
+                    } else {
+                      // play(track.uri);
+                      playTrack(currentTrackIndex);
+                    }
+                  }}
+                >
+                  {isAudioPlaying ? "Stop" : isLoading ? "Wait" : "Play"}
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
-    ))}
-  </div>
-)}
+      )}
       <Router>
         <PageRouter path="/pages/:pageName" />
       </Router>
