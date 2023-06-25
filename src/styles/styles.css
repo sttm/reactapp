@@ -436,4 +436,7 @@ a:not(.btn--remix):visited {
   .wrapper {
     padding: 0 20px;
   }
+  .player__controls button {
+    padding: 5px 7px;
+}
 }
