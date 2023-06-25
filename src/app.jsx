@@ -27,6 +27,7 @@
     const [menuVisible, setMenuVisible] = useState(false);
     const [volume, setVolume] = useState(1);
     const [playbackRate, setPlaybackRate] = useState(1);
+    const [isPlaybackRateIncreasing, setIsPlaybackRateIncreasing] = useState(false);
     const [theme, setTheme] = useState("dark");
     const intervals = [1, 2, 5, 10, 15, 20, 30, "off"];
     const [currentInterval, setCurrentInterval] = useState("off");
