@@ -530,12 +530,12 @@ export default function Home() {
         playTrack={playTrack}
         currentTrackIndex={currentTrackIndex}
         setCurrentTrackIndex={setCurrentTrackIndexFromPlayer}
-        // currentTrack={allTracks[currentTrackIndex]}
-        // currentImage={images.find((image) =>
-        //   image.field_mobile_looper.und.some(
-        //     (track) => track.uri === allTracks[currentTrackIndex]?.uri
-        //   )
-        // )}
+        currentTrack={allTracks[currentTrackIndex]}
+        currentImage={images.find((image) =>
+          image.field_mobile_looper.und.some(
+            (track) => track.uri === allTracks[currentTrackIndex]?.uri
+          )
+        )}
         audioContextRef={audioContextRef}
         isLoading={isLoading}
         toggleMenu={toggleMenu}
