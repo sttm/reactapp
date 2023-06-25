@@ -453,12 +453,13 @@ export default function Home() {
                     if (isAudioPlaying) {
                       stop();
                     } else {
-                      console.log(track);
-                      console.log("--");
+                      // console.log(track);
+                      // console.log("--");
                       // console.log(currentTrackIndex);
+                      currentTrack = track;
                       console.log(currentTrack);
-                      // play(track.uri);
-                      playTrack(index);
+                      play(track.uri);
+                      // playTrack(index);
                     }
                   }}
                 >
