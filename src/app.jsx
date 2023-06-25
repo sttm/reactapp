@@ -458,8 +458,8 @@ export default function Home() {
                       // console.log(currentTrackIndex);
                       currentTrack = track;
                       console.log(currentTrack);
-                      play(track.uri);
-                      // playTrack(index);
+                      // play(currentTrack.uri);
+                      playTrack(index);
                     }
                   }}
                 >
