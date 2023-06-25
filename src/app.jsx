@@ -498,7 +498,7 @@
               </button>
             </div>
             <div className="app__menu-item">
-            <label htmlFor="increasePlaybackRate">789+</label>
+            <label htmlFor="increasePlaybackRate">ASC</label>
             <input
               type="checkbox"
               id="increasePlaybackRate"
