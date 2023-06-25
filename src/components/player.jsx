@@ -96,6 +96,7 @@ export default function Player({
       }
       
       // play(allTracks[currentTrackIndex].uri);
+      
       playTrack(currentTrackIndex);
     }
   }
