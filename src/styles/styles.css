@@ -484,6 +484,9 @@ a:not(.btn--remix):visited {
   }
 }
 @media only screen and (min-width: 768px) {
+  .player__controls button {
+    padding: 6px 10px;
+  }
   .player__title,
   .player__artist {
 
