@@ -461,9 +461,9 @@ export default function Home() {
                     } else {
                       // console.log(track);
                       // console.log("--");
-                      // console.log(currentTrackIndex);
+                      console.log(currentTrackIndex);
                       // currentTrack = track;
-                      // console.log(currentTrack);
+                      console.log(index);
                       // play(currentTrack.uri);
                       playTrackPanel(track);
                     }
