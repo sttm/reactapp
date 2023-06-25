@@ -452,6 +452,7 @@ export default function Home() {
                     if (isAudioPlaying) {
                       stop();
                     } else {
+                      setCurrentTrackIndex(track);
                       play(track.uri);
                     }
                   }}

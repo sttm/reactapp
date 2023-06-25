@@ -94,7 +94,7 @@ export default function Player({
         audioContextRef.current = new (window.AudioContext ||
           window.webkitAudioContext)();
       }
-      setCurrentTrackIndex(allTracks[currentTrackIndex]);
+      
       play(allTracks[currentTrackIndex].uri);
     }
   }
