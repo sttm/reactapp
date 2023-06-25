@@ -303,6 +303,8 @@
       }
     }, [currentTrackIndex, images, allTracks, images_v]);
 
+
+
     function playNextTrack() {
       // trackHistory.push(currentTrackIndex);
       const nextTrackIndex =
@@ -335,16 +337,27 @@
     let intervalId; // Move this outside of useEffect
 
     useEffect(() => {
-      if (allTracks.length > 0 && currentInterval !== "off" && isAudioPlaying) {
-        intervalId = setInterval(playRandomTrack, currentInterval * 60 * 1000);
+      if (audioSourceRef.current) {
+        audioSourceRef.current.playbackRate.value = playbackRate;
       }
+    }, [playbackRate]);
 
-      return () => {
-        if (intervalId) {
-          clearInterval(intervalId);
-        }
-      };
-    }, [allTracks, currentInterval, isAudioPlaying]);
+    useEffect(() => {
+  if (allTracks.length > 0 && currentInterval !== "off" && isAudioPlaying) {
+    intervalId = setInterval(() => {
+      playRandomTrack();
+      if (isPlaybackRateIncreasing) {
+        setPlaybackRate((prevRate) => Math.min(prevRate + 0.01, 1.8));
+      }
+    }, currentInterval * 60 * 1000);
+  }
+
+  return () => {
+    if (intervalId) {
+      clearInterval(intervalId);
+    }
+  };
+}, [allTracks, currentInterval, isAudioPlaying, isPlaybackRateIncreasing]);
 
     useEffect(() => {
       if (!isAudioPlaying && intervalId) {
@@ -475,7 +488,15 @@
                 {currentInterval === "off" ? "off" : `${currentInterval} min`}
               </button>
             </div>
-
+            <div className="app__menu-item">
+            <label htmlFor="increasePlaybackRate">Increase Playback Rate </label>
+            <input
+              type="checkbox"
+              id="increasePlaybackRate"
+              checked={isPlaybackRateIncreasing}
+              onChange={(e) => setIsPlaybackRateIncreasing(e.target.checked)}
+            />
+          </div>
             <div className="app__menu-item">
               <label htmlFor="theme">Theme </label>
               <select
