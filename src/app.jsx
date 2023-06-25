@@ -75,9 +75,9 @@
     }, []);
 
     // Fetch images when component mounts
-    useEffect(() => {
-      fetchMoreImages();
-    }, []);
+    // useEffect(() => {
+    //   fetchMoreImages();
+    // }, []);
 
     const itemsPerPage = 20;
     async function fetchMoreImages(page = 1) {
