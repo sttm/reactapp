@@ -376,7 +376,7 @@
         />
         <div>
           {images.length > 0 ? (
-            <ul className="looper-list">
+            <ul className="looper-list lazy">
       {images.map((image, index) => (
         <li 
           key={`${image.id}-${index}`}
