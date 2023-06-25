@@ -276,7 +276,8 @@ export default function Home() {
       dummyAudioElementRef.current.loop = true;
     }
   }, []);
-
+  let currentTrack;
+  let currentImage;
   // Update media session metadata when current track index or images change
   useEffect(() => {
     if (
