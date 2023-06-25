@@ -83,13 +83,13 @@
     async function fetchMoreImages(page = 1) {
       let data;
       try {
-        const response1 = await fetch("src/output.json");
+        const response1 = await fetch("https://raw.githubusercontent.com/sttm/reactapp/glitch/src/output.json");
         data = await response1.json();
       } catch (error) {
         console.error(error);
         try {
           const response2 = await fetch(
-            "https://raw.githubusercontent.com/sttm/reactapp/glitch/src/output.json"
+            "src/output.json"
           );
           data = await response2.json();
         } catch (error) {
