@@ -1,8 +1,7 @@
 /* styles.css */
 @font-face {
   font-family: HK Grotesk;
-  src: url("https://cdn.glitch.me/605e2a51-d45f-4d87-a285-9410ad350515%2FHKGrotesk-Regular.otf?v=1603136326027")
-    format("opentype");
+  src: url("https://cdn.glitch.me/605e2a51-d45f-4d87-a285-9410ad350515%2FHKGrotesk-Regular.otf?v=1603136326027") format("opentype");
 }
 
 html,
@@ -12,19 +11,24 @@ body {
   overflow-x: hidden;
   max-width: 100%;
 }
+
 body {
   font-family: HK Grotesk;
   /*   background-color: var(--color-bg); */
-  overflow-x: hidden; /* Добавьте это свойство */
+  overflow-x: hidden;
+  /* Добавьте это свойство */
 }
+
 a {
   font-size: 11px;
 }
+
 h2 {
   /*   color: #2800FF; */
   text-align: center;
   font-size: large;
 }
+
 ul {
   width: inherit;
   list-style-type: none;
@@ -44,6 +48,7 @@ li {
   list-style-type: none;
   margin: 50px 0 50px 0;
 }
+
 h1 {
   color: #2800ff;
   font-family: HK Grotesk;
@@ -59,6 +64,7 @@ img {
   display: block;
   margin: 0 auto;
 }
+
 :root {
   --color-bg: #ffffa0;
   --color-text-main: #000000;
@@ -77,29 +83,38 @@ img {
   --color-bg-dark: #333333;
   --color-text-dark: #ffffff;
 }
+
 /* Для веб-китовых браузеров, таких как Chrome, Safari и Opera */
 ::-webkit-scrollbar {
-  width: 8px; /* Ширина вертикальной полосы прокрутки */
-  height: 8px; /* Высота горизонтальной полосы прокрутки */
+  width: 8px;
+  /* Ширина вертикальной полосы прокрутки */
+  height: 8px;
+  /* Высота горизонтальной полосы прокрутки */
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f100; /* Цвет фона дорожки */
+  background: #f1f1f100;
+  /* Цвет фона дорожки */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888; /* Цвет ползунка */
+  background: #888;
+  /* Цвет ползунка */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555; /* Цвет ползунка при наведении */
+  background: #555;
+  /* Цвет ползунка при наведении */
 }
 
 /* Для Firefox */
 * {
-  scrollbar-width: thin; /* Тонкая полоса прокрутки */
-  scrollbar-color: #888 #333333; /* Цвет ползунка и дорожки */
+  scrollbar-width: thin;
+  /* Тонкая полоса прокрутки */
+  scrollbar-color: #888 #333333;
+  /* Цвет ползунка и дорожки */
 }
+
 /* Стили для светлой темы */
 [data-theme="light"] {
   background-color: var(--color-bg);
@@ -120,6 +135,7 @@ img {
 [data-theme="dark"] .looper-list li {
   background-color: #242424;
 }
+
 [data-theme="light"] .panel {
   background-color: #f5f5f5;
 }
@@ -166,7 +182,8 @@ img {
   place-items: center;
   margin: 0 1rem;
   min-height: 86vh;
-  overflow-x: hidden; /* Добавьте это свойство */
+  overflow-x: hidden;
+  /* Добавьте это свойство */
   max-width: 100%;
 }
 
@@ -199,11 +216,13 @@ img {
   border: none;
   cursor: pointer;
 }
+
 .content h2 {
   font-family: HK Grotesk;
   color: black;
   text-align: center;
 }
+
 .panel {
   position: fixed;
   bottom: 60px;
@@ -265,8 +284,13 @@ img {
 }
 
 @keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 
@@ -278,6 +302,7 @@ img {
 * {
   box-sizing: border-box;
 }
+
 [hidden] {
   display: none !important;
 }
@@ -301,9 +326,11 @@ img {
   white-space: nowrap;
   margin-left: auto;
 }
+
 .btn--remix img {
   margin-right: 0.5rem;
 }
+
 .btn--remix:hover {
   background-color: #d0fff1;
 }
@@ -313,7 +340,8 @@ img {
   justify-content: space-between;
   margin: 1rem auto 0;
   padding: 1rem 0 0.75rem 0;
-  width: calc(100% - 2rem); /* Измените это свойство */
+  width: calc(100% - 2rem);
+  /* Измените это свойство */
   flex-wrap: wrap;
   border-top: 4px solid #fff;
 }
@@ -328,6 +356,7 @@ a:not(.btn--remix):visited {
   text-decoration: none;
   border-style: none;
 }
+
 .footer a:hover {
   background: var(--color-primary);
 }
@@ -363,6 +392,7 @@ a:not(.btn--remix):visited {
   cursor: pointer;
   white-space: nowrap;
 }
+
 .btn--click-me:hover {
   text-decoration: underline;
 }
@@ -379,6 +409,7 @@ a:not(.btn--remix):visited {
 .instructions {
   margin: 1rem auto 0;
 }
+
 .instructions p {
   font-size: 1rem;
 }
@@ -387,16 +418,20 @@ a:not(.btn--remix):visited {
   align-items: end;
   flex-direction: initial;
 }
+
 @media only screen and (max-width: 600px) {
+
   /* CSS rules for screens with max-width of 600px */
   .looper-list li {
     width: calc(35% - 2rem);
-        padding: 0;
+    padding: 0;
     margin: 4%;
   }
-    h2 {
+
+  h2 {
     font-size: smaller;
   }
+
   .viewed {
     display: none;
   }
@@ -411,6 +446,7 @@ a:not(.btn--remix):visited {
     width: calc(30% - 2rem);
 
   }
+
   .viewed {
     position: absolute;
     left: 0;
@@ -436,7 +472,14 @@ a:not(.btn--remix):visited {
   .wrapper {
     padding: 0 20px;
   }
+
   .player__controls button {
     padding: 5px 7px;
-}
+  }
+
+  .player__title,
+  .player__artist {
+
+    font-size: 9px;
+  }
 }
