@@ -483,3 +483,11 @@ a:not(.btn--remix):visited {
     font-size: 9px;
   }
 }
+@media only screen and (min-width: 768px) {
+  .player__title,
+  .player__artist {
+
+    font-size: 10px;
+  }
+
+}

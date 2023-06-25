@@ -96,11 +96,11 @@
 }
 .player__title {
   /*   font-size: small; */
-  font-size: 10px;
+  /* font-size: 10px; */
   font-size-adjust: 0.5;
 }
 .player__artist {
-  font-size: 10px;
+  /* font-size: 10px; */
   font-size-adjust: 0.5;
 }
 .app__menu {
