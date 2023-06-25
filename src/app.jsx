@@ -29,7 +29,7 @@ export default function Home() {
   const [playbackRate, setPlaybackRate] = useState(1);
   const [isPlaybackRateIncreasing, setIsPlaybackRateIncreasing] = useState(false);
   const [theme, setTheme] = useState("dark");
-  const intervals = [1, 2, 5, 10, 15, 20, 30, "off"];
+  const intervals = [1, 2, 3, 4, 5, 10, 15, 20, 30, "off"];
   const [currentInterval, setCurrentInterval] = useState("off");
   const [currentIndex, setCurrentIndex] = useState(0);
 
