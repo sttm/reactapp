@@ -12,6 +12,7 @@ export default function Player({
   isAudioPlaying,
   stop,
   play,
+  playTrack,
   currentTrackIndex,
   setCurrentTrackIndex,
   // currentTrack,
@@ -94,10 +95,8 @@ export default function Player({
         audioContextRef.current = new (window.AudioContext ||
           window.webkitAudioContext)();
       }
-      
-      // play(allTracks[currentTrackIndex].uri);
-      
       playTrack(currentTrackIndex);
+      // play(allTracks[currentTrackIndex].uri);
     }
   }
 
