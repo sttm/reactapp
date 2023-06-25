@@ -380,7 +380,7 @@ export default function Home() {
 
     if (allTracks.length > 0) {
       const randomTrackIndex = Math.floor(Math.random() * allTracks.length);
-
+      console.log(randomTrackIndex);
       playTrack(randomTrackIndex);
     } else {
       console.warn("allTracks is empty or not set.");
