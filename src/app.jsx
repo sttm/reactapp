@@ -163,12 +163,7 @@ export default function Home() {
     setPlaybackRate(1);
   }
 
-  function playTrackPanel(track) {
-    setAudioState("PLAYING");
-    loadAudio(track.uri);
-    createAudioContext();
-    setPlaybackRate(1);
-  }
+
   function setCurrentTrackIndexFromPlayer(newIndex) {
     setCurrentTrackIndex(newIndex);
   }
@@ -316,8 +311,8 @@ export default function Home() {
   function playNextTrack() {
     // trackHistory.push(currentTrackIndex);
     const nextTrackIndex =
-    (currentTrackIndex + 1 + allTracks.length) % allTracks.length;
-      // (currentTrackIndex + 1 + Math.floor(Math.random() * allTracks.length)) % allTracks.length;
+      (currentTrackIndex + 1 + allTracks.length) % allTracks.length;
+    // (currentTrackIndex + 1 + Math.floor(Math.random() * allTracks.length)) % allTracks.length;
     playTrack(nextTrackIndex);
   }
 
@@ -392,9 +387,9 @@ export default function Home() {
       console.warn("allTracks is empty or not set.");
     }
   };
-  
 
-  
+
+
   // useEffect(() => {
   //   console.log("audioState:", audioState);
   //   // console.log("isAudioPlaying:", isAudioPlaying);
@@ -459,13 +454,12 @@ export default function Home() {
                     if (isAudioPlaying) {
                       stop();
                     } else {
-                      // console.log(track);
-                      // console.log("--");
-                      console.log("currentTrackIndex "+ currentTrackIndex);
-                      // currentTrack = track;
-                      console.log(index);
-                      // play(currentTrack.uri);
-                      playTrackPanel(track);
+                      const trackIndex = allTracks.findIndex(t => t.uri === track.uri);
+                      if (trackIndex !== -1) {
+                        playTrack(trackIndex);
+                      } else {
+                        console.error('Track not found in allTracks array');
+                      }
                     }
                   }}
                 >
