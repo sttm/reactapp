@@ -22,11 +22,11 @@ export default function Player({
   playRandomTrack,
 }) {
   const audioRef = useRef(null);
-  const [menuVisible, setMenuVisible] = useState(false);
-  const [playbackRate, setPlaybackRate] = useState(1);
-  const [checkboxChecked, setCheckboxChecked] = useState(false);
+  // const [menuVisible, setMenuVisible] = useState(false);
+  // const [playbackRate, setPlaybackRate] = useState(1);
+  // const [checkboxChecked, setCheckboxChecked] = useState(false);
   const [trackTimer, setTrackTimer] = useState(null);
-  const [timerDuration, setTimerDuration] = useState(0);
+  // const [timerDuration, setTimerDuration] = useState(0);
   const [views, setViews] = useState(0);
   const [fontSize, setFontSize] = useState("75%");
 
@@ -46,21 +46,21 @@ export default function Player({
     setViews((v) => v + 1);
   }, []);
 
-  function handleTimerDurationChange(e) {
-    setTimerDuration(e.target.value);
-  }
+  // function handleTimerDurationChange(e) {
+  //   setTimerDuration(e.target.value);
+  // }
 
-  function handlePlaybackRateChange(e) {
-    const newPlaybackRate = e.target.value;
-    setPlaybackRate(newPlaybackRate);
-    if (audioContextRef.current) {
-      audioContextRef.current.playbackRate.value = newPlaybackRate;
-    }
-  }
+  // function handlePlaybackRateChange(e) {
+  //   const newPlaybackRate = e.target.value;
+  //   setPlaybackRate(newPlaybackRate);
+  //   if (audioContextRef.current) {
+  //     audioContextRef.current.playbackRate.value = newPlaybackRate;
+  //   }
+  // }
 
-  function handleCheckboxChange(e) {
-    setCheckboxChecked(e.target.checked);
-  }
+  // function handleCheckboxChange(e) {
+  //   setCheckboxChecked(e.target.checked);
+  // }
   // Play next track when current one finishes
   useEffect(() => {
     function handleEnded() {
@@ -94,19 +94,20 @@ export default function Player({
         audioContextRef.current = new (window.AudioContext ||
           window.webkitAudioContext)();
       }
+      setCurrentTrackIndex(allTracks[currentTrackIndex]);
       play(allTracks[currentTrackIndex].uri);
     }
   }
 
-  function playTrack(trackIndex, timerDuration) {
-    // ... play the track here
-    setTrackTimer(
-      setTimeout(() => {
-        // Switch to the next track when the timer ends
-        setCurrentTrackIndex(currentTrackIndex + 1);
-      }, timerDuration * 1000)
-    );
-  }
+  // function playTrack(trackIndex, timerDuration) {
+  //   // ... play the track here
+  //   setTrackTimer(
+  //     setTimeout(() => {
+  //       // Switch to the next track when the timer ends
+  //       setCurrentTrackIndex(currentTrackIndex + 1);
+  //     }, timerDuration * 1000)
+  //   );
+  // }
 
   return (
     
