@@ -452,7 +452,7 @@ export default function Home() {
                     if (isAudioPlaying) {
                       stop();
                     } else {
-                      playTrack(track);
+                      playTrack(currentTrackIndex);
                     }
                   }}
                 >
