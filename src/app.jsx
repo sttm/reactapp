@@ -163,6 +163,12 @@ export default function Home() {
     setPlaybackRate(1);
   }
 
+  function playTrackPanel(track) {
+    setAudioState("PLAYING");
+    loadAudio(track.uri);
+    createAudioContext();
+    setPlaybackRate(1);
+  }
   function setCurrentTrackIndexFromPlayer(newIndex) {
     setCurrentTrackIndex(newIndex);
   }
@@ -459,7 +465,7 @@ export default function Home() {
                       // currentTrack = track;
                       // console.log(currentTrack);
                       // play(currentTrack.uri);
-                      playTrack(currentTrackIndex);
+                      playTrackPanel(track);
                     }
                   }}
                 >
