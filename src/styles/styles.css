@@ -77,7 +77,29 @@ img {
   --color-bg-dark: #333333;
   --color-text-dark: #ffffff;
 }
+/* Для веб-китовых браузеров, таких как Chrome, Safari и Opera */
+::-webkit-scrollbar {
+  width: 8px; /* Ширина вертикальной полосы прокрутки */
+  height: 8px; /* Высота горизонтальной полосы прокрутки */
+}
 
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Цвет фона дорожки */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888; /* Цвет ползунка */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Цвет ползунка при наведении */
+}
+
+/* Для Firefox */
+* {
+  scrollbar-width: thin; /* Тонкая полоса прокрутки */
+  scrollbar-color: #888 #f1f1f1; /* Цвет ползунка и дорожки */
+}
 /* Стили для светлой темы */
 [data-theme="light"] {
   background-color: var(--color-bg);
