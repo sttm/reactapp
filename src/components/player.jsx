@@ -14,8 +14,8 @@ export default function Player({
   play,
   currentTrackIndex,
   setCurrentTrackIndex,
-  currentTrack,
-  currentImage,
+  // currentTrack,
+  // currentImage,
   audioContextRef,
   isLoading,
   toggleMenu,
@@ -95,7 +95,8 @@ export default function Player({
           window.webkitAudioContext)();
       }
       
-      play(allTracks[currentTrackIndex].uri);
+      // play(allTracks[currentTrackIndex].uri);
+      playTrack(currentTrackIndex);
     }
   }
 
