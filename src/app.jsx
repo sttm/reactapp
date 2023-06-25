@@ -344,21 +344,29 @@
     }, [playbackRate]);
 
     useEffect(() => {
-  if (allTracks.length > 0 && currentInterval !== "off" && isAudioPlaying) {
-    intervalId = setInterval(() => {
-      playRandomTrack();
-      if (isPlaybackRateIncreasing) {
-        setPlaybackRate((prevRate) => Math.min(prevRate + 0.01, 1.8));
+      if (allTracks.length > 0 && currentInterval !== "off" && isAudioPlaying) {
+        intervalId = setInterval(() => {
+          playRandomTrack();
+          if (isPlaybackRateIncreasing) {
+            let secondsElapsed = 0;
+            const increaseIntervalId = setInterval(() => {
+              setPlaybackRate((prevRate) => Math.min(prevRate + 0.01, 1.8));
+              secondsElapsed += 1;
+              if (secondsElapsed >= 60) {
+                clearInterval(increaseIntervalId);
+              }
+            }, 1000);
+          }
+        }, currentInterval * 60 * 1000);
       }
-    }, currentInterval * 60 * 1000);
-  }
-
-  return () => {
-    if (intervalId) {
-      clearInterval(intervalId);
-    }
-  };
-}, [allTracks, currentInterval, isAudioPlaying, isPlaybackRateIncreasing]);
+    
+      return () => {
+        if (intervalId) {
+          clearInterval(intervalId);
+        }
+      };
+    }, [allTracks, currentInterval, isAudioPlaying, isPlaybackRateIncreasing]);
+    
 
     useEffect(() => {
       if (!isAudioPlaying && intervalId) {
@@ -490,7 +498,7 @@
               </button>
             </div>
             <div className="app__menu-item">
-            <label htmlFor="increasePlaybackRate">Increase Playback Rate </label>
+            <label htmlFor="increasePlaybackRate">789+</label>
             <input
               type="checkbox"
               id="increasePlaybackRate"
