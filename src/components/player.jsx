@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlay,
+  faBackward,
+  faForward,
   faStop,
   faRedo,
   faCog,
@@ -11,8 +13,9 @@ export default function Player({
   allTracks,
   isAudioPlaying,
   stop,
-  play,
   playTrack,
+  playNextTrack,
+  playPreviousTrack,
   currentTrackIndex,
   currentTrack,
   currentImage,
@@ -110,11 +113,11 @@ export default function Player({
   // }
 
   return (
-    
+
     <div className="player">
       <div className="viewed">
-      <p>👁 {views} </p>
-    </div>
+        <p>👁 {views} </p>
+      </div>
       <div className="player__info">
         {currentTrack && currentImage && (
           <>
@@ -135,6 +138,9 @@ export default function Player({
         )}
       </div>
       <div className="player__controls">
+        <button onClick={playPreviousTrack}>
+          <FontAwesomeIcon icon={faBackward} />
+        </button>
         {isLoading ? (
           <div className="loading-indicator"></div>
         ) : (
@@ -142,6 +148,9 @@ export default function Player({
             <FontAwesomeIcon icon={isAudioPlaying ? faStop : faPlay} />
           </button>
         )}
+        <button onClick={playNextTrack}>
+          <FontAwesomeIcon icon={faForward} />
+        </button>
         <button onClick={playRandomTrack}>
           <FontAwesomeIcon icon={faRedo} />
         </button>

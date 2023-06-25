@@ -535,6 +535,8 @@ export default function Home() {
         stop={stop}
         play={play}
         playTrack={playTrack}
+        playNextTrack={playNextTrack}
+        playPreviousTrack={playPreviousTrack}
         currentTrackIndex={currentTrackIndex}
         setCurrentTrackIndex={setCurrentTrackIndexFromPlayer}
         currentTrack={allTracks[currentTrackIndex]}
