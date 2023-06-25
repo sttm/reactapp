@@ -21,7 +21,7 @@ export default function Home() {
   const [images, setImages] = useState([]);
   const [allTracks, setAllTracks] = useState([]);
   const [images_v, setImagesV] = useState([]);
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  // const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   // const trackHistory = [];
   const [lastImageElement, setLastImageElement] = useState(null);
   const [menuVisible, setMenuVisible] = useState(false);
@@ -159,13 +159,13 @@ export default function Home() {
     setAudioState("PLAYING");
     loadAudio(track.uri);
     createAudioContext();
-    setCurrentTrackIndex(trackIndex);
+    // setCurrentTrackIndex(trackIndex);
     setPlaybackRate(1);
   }
 
-  function setCurrentTrackIndexFromPlayer(newIndex) {
-    setCurrentTrackIndex(newIndex);
-  }
+  // function setCurrentTrackIndexFromPlayer(newIndex) {
+  //   setCurrentTrackIndex(newIndex);
+  // }
 
   // Stop audio playback
   function stop() {
@@ -456,10 +456,10 @@ export default function Home() {
                       // console.log(track);
                       // console.log("--");
                       // console.log(currentTrackIndex);
-                      currentTrack = track;
+                      // currentTrack = track;
                       console.log(currentTrack);
                       // play(currentTrack.uri);
-                      playTrack(index);
+                      playTrack(currentTrackIndex);
                     }
                   }}
                 >
@@ -536,7 +536,7 @@ export default function Home() {
         play={play}
         playTrack={playTrack}
         currentTrackIndex={currentTrackIndex}
-        setCurrentTrackIndex={setCurrentTrackIndexFromPlayer}
+        // setCurrentTrackIndex={setCurrentTrackIndexFromPlayer}
         currentTrack={allTracks[currentTrackIndex]}
         currentImage={images.find((image) =>
           image.field_mobile_looper.und.some(
