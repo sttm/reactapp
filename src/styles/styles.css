@@ -236,6 +236,19 @@ img {
   background-color: #006bb3;
 }
 
+.fade-in {
+  opacity: 0;
+  animation: fadeIn ease 1s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+
+
 /* img{
     width:100%;
 } */

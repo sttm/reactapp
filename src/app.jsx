@@ -384,6 +384,7 @@
         >
           <h2>{image.title}</h2>
             <img
+              className="fade-in"
               src={image.field_image_field.und[0].uri}
               alt={image.title}
             />
