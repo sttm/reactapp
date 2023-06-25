@@ -27,7 +27,7 @@ export default function Player({
   const [checkboxChecked, setCheckboxChecked] = useState(false);
   const [trackTimer, setTrackTimer] = useState(null);
   const [timerDuration, setTimerDuration] = useState(0);
-
+  const [views, setViews] = useState(0);
   const [fontSize, setFontSize] = useState("75%");
 
   const adjustFontSize = (text) => {
@@ -41,6 +41,10 @@ export default function Player({
       setFontSize("50%");
     }
   };
+
+  useEffect(() => {
+    setViews((v) => v + 1);
+  }, []);
 
   function handleTimerDurationChange(e) {
     setTimerDuration(e.target.value);
@@ -105,7 +109,11 @@ export default function Player({
   }
 
   return (
+    
     <div className="player">
+      <div>
+      <p>page has been viewed {views} times.</p>
+    </div>
       <div className="player__info">
         {currentTrack && currentImage && (
           <>
