@@ -98,7 +98,7 @@ img {
 /* Для Firefox */
 * {
   scrollbar-width: thin; /* Тонкая полоса прокрутки */
-  scrollbar-color: #888 #f1f1f1; /* Цвет ползунка и дорожки */
+  scrollbar-color: #888 #333333; /* Цвет ползунка и дорожки */
 }
 /* Стили для светлой темы */
 [data-theme="light"] {
