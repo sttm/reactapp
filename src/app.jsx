@@ -306,8 +306,8 @@
     function playNextTrack() {
       // trackHistory.push(currentTrackIndex);
       const nextTrackIndex =
-        (currentTrackIndex + 1 + Math.floor(Math.random() * allTracks.length)) %
-        allTracks.length;
+        // (currentTrackIndex + 1 + Math.floor(Math.random() * allTracks.length)) % allTracks.length;
+        (currentTrackIndex + 1 + allTracks.length) % allTracks.length;
       playTrack(nextTrackIndex);
     }
 
