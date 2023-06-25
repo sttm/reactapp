@@ -111,8 +111,8 @@ export default function Player({
   return (
     
     <div className="player">
-      <div>
-      <p>page has been viewed {views} times.</p>
+      <div className="viewed">
+      <p>👁 {views} </p>
     </div>
       <div className="player__info">
         {currentTrack && currentImage && (
