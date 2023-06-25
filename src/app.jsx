@@ -31,8 +31,8 @@ export default function Home() {
   const [theme, setTheme] = useState("dark");
   const intervals = [1, 2, 3, 4, 5, 10, 15, 20, 30, "off"];
   const [currentInterval, setCurrentInterval] = useState("off");
-  const [currentTrack, setCurrentTrack] = useState([]);
-  const [currentImage, setCurrentImage] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   const [fontSize, setFontSize] = useState("75%");
 
   const adjustFontSize = (text) => {
@@ -284,8 +284,8 @@ export default function Home() {
       allTracks.length > 0 &&
       images.length > 0
     ) {
-      currentTrack = allTracks[currentTrackIndex];
-      currentImage = images.find((image) =>
+      const currentTrack = allTracks[currentTrackIndex];
+      const currentImage = images.find((image) =>
         image.field_mobile_looper.und.some(
           (track) => track.uri === currentTrack.uri
         )
@@ -452,7 +452,7 @@ export default function Home() {
                     if (isAudioPlaying) {
                       stop();
                     } else {
-                      playTrack(currentTrackIndex);
+                      play(track.uri);
                     }
                   }}
                 >
@@ -536,7 +536,6 @@ export default function Home() {
             (track) => track.uri === allTracks[currentTrackIndex]?.uri
           )
         )}
-
         audioContextRef={audioContextRef}
         isLoading={isLoading}
         toggleMenu={toggleMenu}
