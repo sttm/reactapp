@@ -454,9 +454,9 @@ export default function Home() {
                       stop();
                     } else {
                       console.log(track);
-                      console.log(index);
-                      console.log(currentTrackIndex);
-                      console.log(currentTrack);
+                      // console.log(index);
+                      // console.log(currentTrackIndex);
+                      // console.log(currentTrack);
                       // play(track.uri);
                       playTrack(index);
                     }
