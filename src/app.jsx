@@ -154,8 +154,8 @@ export default function Home() {
     }
   }
 
-  function playTrack(trackIndex) {
-    const track = allTracks[trackIndex];
+  function playTrack(trackIndex, playlist) {
+    const track = playlist[trackIndex];
     setAudioState("PLAYING");
     loadAudio(track.uri);
     createAudioContext();
@@ -432,38 +432,37 @@ export default function Home() {
         )}
       </div>
       {showPanel && (
-        <div className="panel">
-          {tracks.map((track, index) => (
-            <div className="track" key={index}>
-              <img src={images_v} alt={`Cover of ${track.title}`} />
-              <h3>{track.filename}</h3>
-              <div className="controls">
-                <button
-                  onClick={() => {
-                    if (audioContextRef.current) {
-                      if (audioContextRef.current.state === "suspended") {
-                        audioContextRef.current.resume();
-                      }
-                    } else {
-                      audioContextRef.current = new (window.AudioContext ||
-                        window.webkitAudioContext)();
-                    }
+  <div className="panel">
+    {tracks.map((track, index) => (
+      <div className="track" key={index}>
+        <img src={images_v} alt={`Cover of ${track.title}`} />
+        <h3>{track.filename}</h3>
+        <div className="controls">
+          <button
+            onClick={() => {
+              if (audioContextRef.current) {
+                if (audioContextRef.current.state === "suspended") {
+                  audioContextRef.current.resume();
+                }
+              } else {
+                audioContextRef.current = new (window.AudioContext ||
+                  window.webkitAudioContext)();
+              }
 
-                    if (isAudioPlaying) {
-                      stop();
-                    } else {
-                      // play(track.uri);
-                      playTrack(index);
-                    }
-                  }}
-                >
-                  {isAudioPlaying ? "Stop" : isLoading ? "Wait" : "Play"}
-                </button>
-              </div>
-            </div>
-          ))}
+              if (isAudioPlaying) {
+                stop();
+              } else {
+                playTrack(index, tracks); // передаем текущий плейлист в функцию playTrack
+              }
+            }}
+          >
+            {isAudioPlaying ? "Stop" : isLoading ? "Wait" : "Play"}
+          </button>
         </div>
-      )}
+      </div>
+    ))}
+  </div>
+)}
       <Router>
         <PageRouter path="/pages/:pageName" />
       </Router>
