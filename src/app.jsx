@@ -491,12 +491,6 @@
                 onChange={handlePlaybackRateChange}
               />
             </div>
-            <div className="app__menu-item app__menu-item-separator">
-              <label htmlFor="timer">Timer </label>
-              <button onClick={handleButtonClick}>
-                {currentInterval === "off" ? "off" : `${currentInterval} min`}
-              </button>
-            </div>
             <div className="app__menu-item">
             <label htmlFor="increasePlaybackRate">ASC</label>
             <input
@@ -506,6 +500,13 @@
               onChange={(e) => setIsPlaybackRateIncreasing(e.target.checked)}
             />
           </div>
+            <div className="app__menu-item app__menu-item-separator">
+              <label htmlFor="timer">Timer </label>
+              <button onClick={handleButtonClick}>
+                {currentInterval === "off" ? "off" : `${currentInterval} min`}
+              </button>
+            </div>
+
             <div className="app__menu-item">
               <label htmlFor="theme">Theme </label>
               <select
