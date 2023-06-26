@@ -154,7 +154,9 @@
   .player__controls button {
     padding: 5px 7px;
   }
-  .player__title,
+  .player__title {
+    font-size: 55%;
+  }
   .player__artist {
 
     font-size: 65%;
@@ -166,10 +168,12 @@
   .player {
     padding: 0 25% 0 25%;
   }
-  .player__title,
+  .player__title {
+    font-size: 85%;
+  }
   .player__artist {
 
-    font-size: 85%;
+    font-size: 90%;
   }
 
   .player__controls button {
