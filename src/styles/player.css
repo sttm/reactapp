@@ -154,10 +154,6 @@
   .player__controls button {
     padding: 5px 7px;
   }
-  .player__controls button {
-    padding: 5px 7px;
-  }
-
   .player__title,
   .player__artist {
 
@@ -169,9 +165,6 @@
 @media only screen and (min-width: 601px) {
   .player {
     padding: 0 25% 0 25%;
-  }
-  .player__controls button {
-    padding: 6px 10px;
   }
   .player__title,
   .player__artist {
