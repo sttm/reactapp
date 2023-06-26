@@ -36,9 +36,9 @@ export default function Player({
   const adjustFontSize = (text) => {
     const length = text.length;
 
-    if (length < 10) {
+    if (length < 15) {
       setFontSize("100%");
-    } else if (length < 20) {
+    } else if (length < 30) {
       setFontSize("75%");
     } else {
       setFontSize("50%");
