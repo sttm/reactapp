@@ -31,7 +31,7 @@ export default function Player({
   // const [trackTimer, setTrackTimer] = useState(null);
   // const [timerDuration, setTimerDuration] = useState(0);
   const [views, setViews] = useState(0);
-  const [fontSize, setFontSize] = useState("100%");
+  const [fontSize, setFontSize] = useState("85%");
 
   const adjustFontSize = (text) => {
     const length = text.length;
