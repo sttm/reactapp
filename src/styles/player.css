@@ -169,7 +169,7 @@
   .player__title,
   .player__artist {
 
-    font-size: 10px;
+    font-size: 85%;
   }
 
   .player__controls button {
