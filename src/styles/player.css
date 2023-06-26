@@ -123,14 +123,7 @@
   margin-bottom: 0;
 }
 
-@keyframes spinner {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
+
 
 .loading-indicator {
   display: inline-block;
@@ -140,6 +133,15 @@
   border-left-color: #333;
   border-radius: 50%;
   animation: spinner 1s linear infinite;
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 /* Добавьте медиа-запрос для мобильных устройств */
 @media screen and (max-width: 767px) {
