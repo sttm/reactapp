@@ -189,12 +189,9 @@ export default function Home() {
     }
 
     if (audioSourceRef.current) {
-      try {
-        audioSourceRef.current.stop();
-        audioSourceRef.current.disconnect();
-      } catch (error) {
-        console.error('Failed to stop audio:', error);
-      }
+      audioSourceRef.current.stop();
+      audioSourceRef.current.disconnect();
+
       
     }
 
@@ -236,12 +233,8 @@ export default function Home() {
   useEffect(() => {
     return () => {
       if (audioSourceRef.current) {
-        try {
-          audioSourceRef.current.stop();
-          audioSourceRef.current.disconnect();
-        } catch (error) {
-          console.error('Failed to stop audio:', error);
-        }
+        audioSourceRef.current.stop();
+        audioSourceRef.current.disconnect();
         
       }
       if (audioContextRef.current) {
