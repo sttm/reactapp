@@ -127,12 +127,12 @@ export default function Player({
               className="player__album-art"
             />
             <div className="player_all_title">
-              <p className="player__title" style={{ fontSize }}>
-              {/* <p className="player__title"> */}
+              {/* <p className="player__title" style={{ fontSize }}> */}
+              <p className="player__title">
                 {currentTrack.title_album}
               </p>
-              <p className="player__artist" style={{ fontSize }}>
-              {/* <p className="player__artist"> */}
+              {/* <p className="player__artist" style={{ fontSize }}> */}
+              <p className="player__artist">
                 {currentTrack.filename}
               </p>
             </div>
