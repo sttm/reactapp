@@ -157,7 +157,7 @@
   .player__title,
   .player__artist {
 
-    font-size: 9px;
+    font-size: 65%;
   }
   /* CSS rules for screens with max-width of 600px */
 }
