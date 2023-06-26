@@ -188,7 +188,7 @@ export default function Home() {
       await context.resume();
     }
 
-    if (audioSourceRef.current) {
+    if (audioSourceRef.current && isAudioPlaying) {
       try {
         audioSourceRef.current.stop();
         audioSourceRef.current.disconnect();
