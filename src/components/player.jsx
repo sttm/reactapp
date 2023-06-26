@@ -140,9 +140,9 @@ export default function Player({
         )}
       </div>
       <div className="player__controls">
-        {/* <button onClick={playPreviousTrack}>
+        <button onClick={playPreviousTrack}>
           <FontAwesomeIcon icon={faBackward} />
-        </button> */}
+        </button>
         {isLoading ? (
           <div className="loading-indicator"></div>
         ) : (

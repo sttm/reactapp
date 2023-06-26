@@ -231,8 +231,13 @@ export default function Home() {
   useEffect(() => {
     return () => {
       if (audioSourceRef.current) {
-        audioSourceRef.current.stop();
-        audioSourceRef.current.disconnect();
+        try {
+          audioSourceRef.current.stop();
+          audioSourceRef.current.disconnect();
+        } catch (error) {
+          console.error('Failed to stop audio:', error);
+        }
+        
       }
       if (audioContextRef.current) {
         audioContextRef.current.close();
