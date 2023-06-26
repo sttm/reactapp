@@ -33,7 +33,7 @@ export default function Home() {
   const [currentInterval, setCurrentInterval] = useState("off");
   // const [currentIndex, setCurrentIndex] = useState(0);
 
-  const [fontSize, setFontSize] = useState("75%");
+  const [fontSize, setFontSize] = useState("65%");
 
   const adjustFontSize = (text) => {
     const length = text.length;
