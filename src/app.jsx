@@ -189,8 +189,13 @@ export default function Home() {
     }
 
     if (audioSourceRef.current) {
-      audioSourceRef.current.stop();
-      audioSourceRef.current.disconnect();
+      try {
+        audioSourceRef.current.stop();
+        audioSourceRef.current.disconnect();
+      } catch (error) {
+        console.error('Failed to stop audio:', error);
+      }
+      
     }
 
     const source = context.createBufferSource();
