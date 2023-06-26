@@ -159,7 +159,7 @@ export default function Player({
         <button
           onClick={() => {
             toggleMenu();
-            setMenuVisible((prevState) => !prevState);
+            // setMenuVisible((prevState) => !prevState);
           }}
         >
           <FontAwesomeIcon icon={faCog} />
