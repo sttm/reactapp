@@ -79,17 +79,7 @@
   align-items: center;
 }
 
-.player__controls button {
-  margin-left: 5px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  font-size: 14px;
-  padding: 8px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
+
 
 .player__controls button:hover {
   background-color: #0056b3;
@@ -161,12 +151,44 @@
   } */
 }
 @media only screen and (max-width: 600px) {
+  .player__controls button {
+    padding: 5px 7px;
+  }
+  .player__controls button {
+    padding: 5px 7px;
+  }
+
+  .player__title,
+  .player__artist {
+
+    font-size: 9px;
+  }
   /* CSS rules for screens with max-width of 600px */
 }
 
 @media only screen and (min-width: 601px) {
   .player {
     padding: 0 25% 0 25%;
+  }
+  .player__controls button {
+    padding: 6px 10px;
+  }
+  .player__title,
+  .player__artist {
+
+    font-size: 10px;
+  }
+
+  .player__controls button {
+    margin-left: 5px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
   }
   /* CSS rules for screens with min-width of 601px */
 }
