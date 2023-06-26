@@ -129,11 +129,11 @@ export default function Player({
             <div className="player_all_title">
               <p className="player__title" style={{ fontSize }}>
               {/* <p className="player__title"> */}
-                {adjustFontSize(currentTrack.title_album)}
+                {currentTrack.title_album}
               </p>
               <p className="player__artist" style={{ fontSize }}>
               {/* <p className="player__artist"> */}
-                {adjustFontSize(currentTrack.filename)}
+                {currentTrack.filename}
               </p>
             </div>
           </>
