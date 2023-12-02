@@ -401,7 +401,7 @@ export default function Home() {
     <>
       <audio
         ref={dummyAudioElementRef}
-        src="https://cdnsongs.com/dren/music/data/Punjabi/202301/Relentless_EP/128/Example_1.mp3/Example.mp3?raw=true"
+        src="https://github.com/anars/blank-audio/blob/master/15-seconds-of-silence.mp3?raw=true"
       />
       <div>
         {images.length > 0 ? (
